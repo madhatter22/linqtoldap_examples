@@ -1,0 +1,33 @@
+﻿<Window x:Class="LinqToLdap.Examples.Wpf.Views.MainView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        xmlns:views="clr-namespace:LinqToLdap.Examples.Wpf.Views"
+        xmlns:viewModels="clr-namespace:LinqToLdap.Examples.Wpf.ViewModels"
+        Title="MainView" Height="600" Width="800">
+    <Window.Resources>
+        <DataTemplate DataType="{x:Type viewModels:ServerInfoViewModel}">
+            <views:ServerInfoView></views:ServerInfoView>
+        </DataTemplate>
+    </Window.Resources>
+    <xctk:BusyIndicator IsBusy="{Binding Path=IsBusy}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <DockPanel  LastChildFill="False" Margin="5">
+                    <TextBlock DockPanel.Dock="Left" VerticalAlignment="Center" Style="{StaticResource MainHeader}">LINQ to LDAP WPF Examples</TextBlock>
+                    <CheckBox IsChecked="{Binding Path=EnableLogging}" DockPanel.Dock="Right" VerticalAlignment="Center">Enable Logging (see output window)</CheckBox>
+                </DockPanel>
+                <StackPanel Style="{StaticResource LeftAlignedButtonGroup}">
+                    <Button>About</Button>
+                    <Button Command="{Binding Path=ShowServerInfoCommand}">Server Info</Button>
+                    <Button>Users</Button>
+                    <Button>Org Units</Button>
+                </StackPanel>
+            </StackPanel>
+            <ContentControl Grid.Row="1" Content="{Binding Path=CurrentView, UpdateSourceTrigger=PropertyChanged}"/>
+        </Grid>
+    </xctk:BusyIndicator>
+</Window>

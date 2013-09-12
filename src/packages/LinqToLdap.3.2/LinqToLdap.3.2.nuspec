@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>LinqToLdap</id>
+    <version>3.2</version>
+    <title>LINQ to LDAP</title>
+    <authors>Alan Hatter</authors>
+    <owners>Alan Hatter</owners>
+    <licenseUrl>http://linqtoldap.codeplex.com/license</licenseUrl>
+    <projectUrl>http://linqtoldap.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>LINQ provider built on top of System.DirectoryServices.Protocols for querying and updating LDAP servers.</description>
+    <summary>LINQ provider built on top of System.DirectoryServices.Protocols for querying and updating LDAP servers.</summary>
+    <releaseNotes>New Features
+Underscores in property names that do not have an explicitly mapped attribute name will get converted to hyphens for the attribute name.
+
+Support for .Net 3.5, 4.0, and 4.5.
+
+Async methods are included in LinqToLdap.Contrib.dll
+
+It's now possible to prefix a server name with LDAP://
+
+Bug Fixes
+Calling Dispose on DirectoryContext multiple times will no longer throw an exception.  There is also guarding against the .NET 4.5 bug in LdapConnection.Dispose being called multiple times.
+
+It's now possible to use enums stored as strings in a filter.
+
+Breaking Changes
+Add and Update methods added that do not have a return value.  AddAndGet and UpdateAndGet added to fill that need.
+
+RegisterListener renamed to RegisterListeners and now takes a params array.</releaseNotes>
+    <copyright />
+    <language>en-US</language>
+    <tags>LINQ LDAP AD active directory openldap tivoli</tags>
+    <frameworkAssemblies>
+      <frameworkAssembly assemblyName="System" targetFramework="" />
+      <frameworkAssembly assemblyName="System.Core" targetFramework="" />
+      <frameworkAssembly assemblyName="System.DirectoryServices.Protocols" targetFramework="" />
+    </frameworkAssemblies>
+  </metadata>
+</package>
