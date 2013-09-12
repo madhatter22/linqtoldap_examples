@@ -6,7 +6,10 @@
         Title="MainView" Height="600" Width="800">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:ServerInfoViewModel}">
-            <views:ServerInfoView></views:ServerInfoView>
+            <views:ServerInfoView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:UsersViewModel}">
+            <views:UsersView/>
         </DataTemplate>
     </Window.Resources>
     <xctk:BusyIndicator IsBusy="{Binding Path=IsBusy}">
@@ -23,7 +26,7 @@
                 <StackPanel Style="{StaticResource LeftAlignedButtonGroup}">
                     <Button>About</Button>
                     <Button Command="{Binding Path=ShowServerInfoCommand}">Server Info</Button>
-                    <Button>Users</Button>
+                    <Button Command="{Binding Path=ShowUsersCommand}">Users</Button>
                     <Button>Org Units</Button>
                 </StackPanel>
             </StackPanel>

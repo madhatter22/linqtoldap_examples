@@ -32,7 +32,9 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                         {
                             using (var directoryContext = Get<IDirectoryContext>())
                             {
-                                //open ldap makes you specifically name the attributes. 
+                                //you can call ListServerAttributes to get this information, 
+                                //but I wanted to give an example of a dynamic query
+
                                 return directoryContext.ListServerAttributes("altServer", "objectClass", "namingContexts",
                                                                              "supportedControl", "supportedExtension",
                                                                              "supportedLDAPVersion",

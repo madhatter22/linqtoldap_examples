@@ -19,7 +19,7 @@ namespace LinqToLdap.Examples.Models
         [DirectoryAttribute("sn", ReadOnly = true)]
         public string LastName { get; set; }
 
-        [DirectoryAttribute]
+        [DirectoryAttribute(ReadOnly = true)]
         public string TelephoneNumber { get; set; }
     }
 }

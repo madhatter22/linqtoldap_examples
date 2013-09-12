@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -27,10 +23,12 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
             _messenger.Register<ToggleBusyMessage>(this, HandleToggleBusyMessage);
 
-            ShowServerInfoCommand = new RelayCommand(ShowServerInfo);
+            ShowServerInfoCommand = new RelayCommand(ChangeView<ServerInfoViewModel>);
+            ShowUsersCommand = new RelayCommand(ChangeView<UsersViewModel>);
         }
 
         public ICommand ShowServerInfoCommand { get; private set; }
+        public ICommand ShowUsersCommand { get; private set; }
 
         private bool _isBusy;
         public bool IsBusy
@@ -79,11 +77,11 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             IsBusy = !IsBusy;
         }
 
-        private void ShowServerInfo()
+        private void ChangeView<T>() where T : ViewModelBase, new()
         {
             if (!IsBusy)
             {
-                CurrentView = new ServerInfoViewModel();
+                CurrentView = new T();
             }
         }
     }
