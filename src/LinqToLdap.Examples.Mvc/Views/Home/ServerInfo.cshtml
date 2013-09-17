@@ -1,0 +1,32 @@
+﻿@{
+    ViewBag.Title = "ServerInfo";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts
+{
+    <script type="text/javascript">
+        $(function() {
+            $('#navAbout').addClass("active");
+            ko.applyBindings(new ServerInfoViewModel(), $('#serverSettings')[0]);
+        });
+    </script>
+}
+
+<h1>Server Info</h1>
+
+<p>Here is a simple example of listing the server attributes. This will contain useful information about what the server can and cannot support.</p>
+<br/><br/>
+<table id="serverSettings" class="table">
+    <thead>
+        <tr>
+            <td>Key</td>
+            <td>Value</td>
+        </tr>
+    </thead>
+    <tbody data-bind="foreach: serverSettings">
+        <tr>
+            <td data-bind="text: name"/>
+            <td data-bind="text: 'value'"/>
+        </tr>
+    </tbody>
+</table>

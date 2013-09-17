@@ -63,10 +63,9 @@ namespace LinqToLdap.Examples.Wpf
                       .ProtocolVersion(3);
 
                 return config;
-
             });
 
-            container.Register<IDirectoryContext>(() => container.GetInstance<ILdapConfiguration>().CreateContext());
+            container.Register<IDirectoryContext>(() => new DirectoryContext(container.GetInstance<ILdapConfiguration>()));
 
             Container = container;
             var view = new MainView(new MainViewModel());

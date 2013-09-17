@@ -45,7 +45,14 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource Header}" Grid.Row="0" Margin="5">Users</TextBlock>
+        <DockPanel LastChildFill="False" Grid.Row="0" Margin="5">
+            <TextBlock Style="{StaticResource Header}" DockPanel.Dock="Left">Users</TextBlock>
+            <StackPanel Orientation="Horizontal" DockPanel.Dock="Right">
+                <CheckBox IsChecked="{Binding CustomFilter}" Margin="5,0">Custom Filter</CheckBox>
+                <TextBox Margin="5,0" Text="{Binding SearchText}"></TextBox>
+            </StackPanel>
+        </DockPanel>
+        
         <ContentControl Grid.Row="1" Margin="5"/>
     </Grid>
 </UserControl>

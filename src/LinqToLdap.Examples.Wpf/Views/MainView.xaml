@@ -11,6 +11,11 @@
         <DataTemplate DataType="{x:Type viewModels:UsersViewModel}">
             <views:UsersView/>
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:DialogViewModel}">
+            <xctk:ChildWindow IsModal="True">
+                
+            </xctk:ChildWindow>
+        </DataTemplate>
     </Window.Resources>
     <xctk:BusyIndicator IsBusy="{Binding Path=IsBusy}">
         <Grid>
@@ -28,6 +33,16 @@
                     <Button Command="{Binding Path=ShowServerInfoCommand}">Server Info</Button>
                     <Button Command="{Binding Path=ShowUsersCommand}">Users</Button>
                     <Button>Org Units</Button>
+
+                    <xctk:SplitButton Content="Performance" Height="22">
+                        <xctk:SplitButton.DropDownContent>
+                            <ItemsControl>
+                                <Button>Normal Connection Factory vs Connection Pool</Button>
+                                <Button></Button>
+                                <Button></Button>
+                            </ItemsControl>
+                        </xctk:SplitButton.DropDownContent>
+                    </xctk:SplitButton>
                 </StackPanel>
             </StackPanel>
             <ContentControl Grid.Row="1" Content="{Binding Path=CurrentView, UpdateSourceTrigger=PropertyChanged}"/>
