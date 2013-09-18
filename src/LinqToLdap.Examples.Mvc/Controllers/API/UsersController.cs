@@ -1,5 +1,7 @@
 ﻿using System;
+using System.DirectoryServices.Protocols;
 using System.Linq;
+using System.Net;
 using System.Web.Http;
 using LinqToLdap.Examples.Models;
 
@@ -14,13 +16,11 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             _context = context;
         }
 
-        public object Get(string q, bool custom, string filter, string nextPage)
+        public object Get(string q, bool custom)
         {
-            int pageSize = 5;
             var query = _context.Query<User>();
 
-            //if there's a filter we should reuse it and bypass the searching
-            if (!string.IsNullOrWhiteSpace(q) && string.IsNullOrWhiteSpace(filter))
+            if (!string.IsNullOrWhiteSpace(q))
             {
                 if (custom)
                 {
@@ -42,14 +42,18 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
                 }
             }
 
-            //in order for paging to work correctly the request must be identical each time with the exception of the page size.
-            var results = !string.IsNullOrWhiteSpace(nextPage)
-                              ? query.Select(s => new {s.DistinguishedName, Name = string.Format("{0} {1}", s.FirstName, s.LastName)})
-                                     .ToPage(pageSize, Convert.FromBase64String(nextPage), filter)
-                              : query.Select(s => new {s.DistinguishedName, Name = string.Format("{0} {1}", s.FirstName, s.LastName)})
-                                     .ToPage(pageSize);
+            var results = query.Select(s => new { s.DistinguishedName, Name = string.Format("{0} {1}", s.FirstName, s.LastName), s.UserId }).ToArray();
 
-            return new {Items = results.ToList(), NextPage = results.NextPage != null ? Convert.ToBase64String(results.NextPage) : "", results.Filter};
+            return results;
+        }
+
+        public object Get(string id)
+        {
+            var user = _context.Query<User>().FirstOrDefault(u => u.UserId == id);
+
+            if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
+
+            return user;
         }
     }
 }

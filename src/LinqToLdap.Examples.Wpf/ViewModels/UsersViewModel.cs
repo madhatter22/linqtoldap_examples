@@ -20,15 +20,17 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     public class UsersViewModel : ViewModel
     {
         private IMessenger _messenger;
+        private IDirectoryContext _context;
         private bool _isBusy;
 
-        public UsersViewModel() : this(Get<IMessenger>())
+        public UsersViewModel() : this(Get<IMessenger>(), Get<IDirectoryContext>())
         {
         }
 
-        public UsersViewModel(IMessenger messenger)
+        public UsersViewModel(IMessenger messenger, IDirectoryContext context)
         {
             _messenger = messenger;
+            _context = context;
 
             Users = new ObservableCollection<UserListViewModel>();
 
@@ -99,29 +101,31 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                 .StartNew(
                     () =>
                         {
-                            
-                            using (var context = Get<IDirectoryContext>())
+                            var query = _context.Query<User>();
+                            if (!string.IsNullOrWhiteSpace(SearchText))
                             {
-                                var query = context.Query<User>();
-                                if (!string.IsNullOrWhiteSpace(SearchText))
+                                if (CustomFilter)
                                 {
-                                    if (CustomFilter)
-                                    {
-                                        query = query.Where(SearchText);
-                                    }
-                                    else
-                                    {
-                                        //not really necessary but a good example of dynamic query building.
-                                        Expression<Func<User, bool>> expression = PredicateBuilder.Create<User>()
-                                            .And(s => s.FirstName == SearchText || Filter.Equal(s, "sn", SearchText.CleanFilterValue()));
-
-                                        query = query.Where(expression);
-                                    }
+                                    //by default filters passed to the Where clause are not cleaned.
+                                    //if your users don't understand valid filters I would go with fixed search options.
+                                    query = query.Where(SearchText);
                                 }
+                                else
+                                {
+                                    //very basic support for searching by first and last name
+                                    var split = SearchText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-                                return query.Select(s => new UserListViewModel(s.DistinguishedName, s.FirstName, s.LastName, ShowUser))
-                                         .ToList();
+                                    var expression = PredicateBuilder.Create<User>();
+                                    expression = split.Length == 2
+                                        ? expression.And(s => s.FirstName.StartsWith(split[0]) && s.LastName.StartsWith(split[1]))
+                                        : split.Aggregate(expression, (current, t) => current.Or(s => s.FirstName.StartsWith(t) || s.LastName.StartsWith(t)));
+
+                                    query = query.Where(expression);
+                                }
                             }
+
+                            return query.Select(s => new UserListViewModel(s.DistinguishedName, s.FirstName, s.LastName, ShowUser))
+                                     .ToList();
                         })
                 .ContinueWith(
                     t =>
@@ -145,8 +149,38 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private void ShowUser(string dn)
         {
-            CurrentUser = new UserItemViewModel(dn, CloseUser);
-            Type = UserDisplayType.User;
+            
+        }
+
+        private void LoadUser(string id)
+        {
+            _messenger.Send(new ToggleBusyMessage());
+            Task.Factory
+                .StartNew(
+                    () => _context.Query<User>().FirstOrDefault(u => u.UserId == id))
+                .ContinueWith(
+                    t =>
+                    {
+                        _messenger.Send(new ToggleBusyMessage());
+                        if (t.Exception != null)
+                        {
+                            _messenger.Send(new ErrorMessage(t.Exception));
+                            return;
+                        }
+
+                        var user = t.Result;
+
+                        if (user == null)
+                        {
+                            _messenger.Send(new Messages.DialogMessage(string.Format("{0} not found", id), "Not Found", DialogType.Error));
+                        }
+                        else
+                        {
+                            if (CurrentUser != null) CurrentUser.Cleanup();
+                            CurrentUser = new UserItemViewModel(user, CloseUser);
+                            Type = UserDisplayType.User;
+                        }
+                    });
         }
 
         private void CloseUser()
@@ -158,6 +192,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public override void Cleanup()
         {
             _messenger = null;
+            _context.Dispose();
             base.Cleanup();
         }
     }

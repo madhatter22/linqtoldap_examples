@@ -1,4 +1,4 @@
-﻿table.scrollable {
-    max-height: 400px;
+﻿.scrollable {
+    max-height: 300px;
     overflow: auto;
 }

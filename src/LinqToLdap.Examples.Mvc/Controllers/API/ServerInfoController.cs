@@ -53,27 +53,16 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
                                     return new { kvp.Key, Value = kvp.Value == null ? "" : kvp.Value.ToString() };
                                 })
                 .ToArray();
+
+            //under the covers this actually executes a query that looks something like this:
+            //
+            //_context.Query(null, SearchScope.Base)
+            //        .Where("(objectClass=*)")
+            //        .Select("namingContexts", "supportedControl", "supportedExtension", "supportedLDAPVersion",
+            //                "supportedSASLMechanisms", "vendorName", "vendorVersion", "supportedAuthPasswordSchemes")
+            //        .FirstOrDefault();
+            //
+            //null or empty naming contexts are not supported using the normal Query method.
         }
-
-        //// GET api/<controller>/5
-        //public string Get(int id)
-        //{
-        //    return "value";
-        //}
-
-        //// POST api/<controller>
-        //public void Post([FromBody]string value)
-        //{
-        //}
-
-        //// PUT api/<controller>/5
-        //public void Put(int id, [FromBody]string value)
-        //{
-        //}
-
-        //// DELETE api/<controller>/5
-        //public void Delete(int id)
-        //{
-        //}
     }
 }

@@ -8,16 +8,14 @@
         $(function () {
             $('#navServerInfo').closest('li').addClass('active');
             var vm = new linqtoldap.viewModels.ServerInfoViewModel();
-            //vm.load();
             ko.applyBindings(vm, $('#serverInfoView')[0]);
         });
     </script>
 }
-
 <h1>Server Info</h1>
 
-<p>Here is a simple example of listing the server attributes. This will contain useful information about what the server can and cannot support.</p>
-<br/><br/>
+<p>Here is a simple example of listing the server attributes. This will contain useful information about what the server can and cannot support. Code is in Scripts / app / serverInfoViewModel.js and Controllers / API / ServerInfoController.cs</p>
+<br/>
 <table id="serverInfoView" class="table table-hover">
     <thead>
         <tr>

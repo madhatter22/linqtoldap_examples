@@ -1,48 +1,71 @@
 ﻿linqtoldap.viewModels.UsersViewModel = function () {
     var self = this;
-    var nextPage;
-    var currentFilter;
 
-    var ListItemViewModel = function(item) {
-        this.load = function() {
-            alertify.log('placeholder for actually loading');
-            self.mode('item');
-        };
-
+    var ListItemViewModel = function (item) {
         this.distinguishedName = ko.observable(item.DistinguishedName);
         this.name = ko.observable(item.Name);
-
+        this.userId = ko.observable(item.UserId);
+        
+        this.load = function() {
+            self.loadItem(this.userId());
+        }.bind(this);
+        
         return this;
     };
 
+    var ItemViewModel = function () {
+        this.distinguishedName = ko.observable('');
+        this.commonName = ko.observable('');
+        this.userId = ko.observable('');
+        this.firstName = ko.observable('');
+        this.lastName = ko.observable('');
+        this.telephoneNumber = ko.observable('');
+
+        this.setValues = function(item) {
+            this.distinguishedName(item.DistinguishedName);
+            this.commonName(item.CommonName);
+            this.userId(item.UserId);
+            this.firstName(item.FirstName);
+            this.lastName(item.LastName);
+            this.telephoneNumber(item.TelephoneNumber);
+        };
+    };
+
+    self.isSearching = ko.observable(false);
     self.query = ko.observable('');
     self.mode = ko.observable('list');
     self.items = ko.observableArray([]);
-    self.canLoadMore = ko.observable(true);
     self.isCustomFilter = ko.observable(false);
+    self.item = new ItemViewModel();
 
-    self.getPage = function () {
-        alertify.log("Loading...", 'log', 1000);
-        $.getJSON('/api/users/get', { q: self.query(), custom: self.isCustomFilter(), filter: currentFilter, nextPage: nextPage })
-            .success(function (data) {
-                var underlyingItems = self.items();
-                $.each(data.Items, function(index, item) {
-                    underlyingItems.push(new ListItemViewModel(item));
-                });
-                nextPage = data.NextPage;
-                currentFilter = data.Filter;
-                self.canLoadMore(nextPage && nextPage.length > 0);
-                self.items.valueHasMutated();
-            })
-            .fail(function(jqxhr, textStatus, error) {
-                alertify.error(textStatus + ' ' + error);
-            });
+    self.showList = function() {
+        self.mode('list');
     };
 
-    self.search = function() {
-        currentFilter = '';
-        nextPage = '';
-        self.getPage();
+    self.loadItem = function (id) {
+        alertify.log("Loading...", 'log', 1000);
+        $.getJSON('/api/users/get', { id: id })
+            .success(function (data) {
+                self.item.setValues(data);
+                self.mode('item');
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                alertify.error(textStatus + ': ' + error);
+            });
+    };
+    
+    self.search = function () {
+        self.isSearching(true);
+        alertify.log("Loading...", 'log', 1000);
+        $.getJSON('/api/users/get', { q: self.query(), custom: self.isCustomFilter() })
+            .success(function (data) {
+                self.isSearching(false);
+                self.items($.map(data, function(value) { return new ListItemViewModel(value); }));
+            })
+            .fail(function (jqxhr, textStatus, error) {
+                self.isSearching(false);
+                alertify.error(textStatus + ': ' + error);
+            });
     };
 
     self.search();

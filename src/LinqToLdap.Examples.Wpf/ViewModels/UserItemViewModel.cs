@@ -3,6 +3,7 @@ using System.DirectoryServices.Protocols;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using LinqToLdap.Examples.Models;
 using LinqToLdap.Examples.Wpf.Messages;
@@ -13,17 +14,13 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     {
         private User _user;
         private Action _close;
-        private IMessenger _messenger;
-
-        public UserItemViewModel(string dn, Action close) : this (dn, close, Get<IMessenger>())
+        
+        public UserItemViewModel(User user, Action close)
         {
-        }
-
-        public UserItemViewModel(string dn, Action close, IMessenger messenger)
-        {
-            DistinguishedName = dn;
+            _user = user;
             _close = close;
-            _messenger = messenger;
+
+            CloseCommand = new RelayCommand(_close);
         }
 
         public ICommand CloseCommand { get; private set; }
@@ -93,43 +90,10 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                 RaisePropertyChanged("TelephoneNumber");
             }
         }
-
-        private void LoadData(string dn)
-        {
-            Task.Factory
-                .StartNew(
-                    () =>
-                        {
-                            using (var context = Get<IDirectoryContext>())
-                            {
-                                //You can use GetByDN or a Query.  I chose to use a query here because
-                                //GetByDN uses the DN as the search root so if it doesn't exist then an error will be thrown.
-                                //Query will not have that problem.
-                                return context.Query<User>(SearchScope.OneLevel)
-                                               .SingleOrDefault(u => u.DistinguishedName == DistinguishedName);
-                            }
-                        })
-                .ContinueWith(
-                    t =>
-                        {
-                            if (t.Exception != null)
-                            {
-                                _messenger.Send(new ErrorMessage(t.Exception));
-                                return;
-                            }
-
-                            _user = t.Result;
-                            if (_user == null)
-                            {
-                                _messenger.Send(new Messages.DialogMessage(string.Format("{0} not found", dn), "Not Found", DialogType.Error));
-                            }
-                        });
-        }
-
+        
         public override void Cleanup()
         {
             _close = null;
-            _messenger = null;
             base.Cleanup();
         }
     }
