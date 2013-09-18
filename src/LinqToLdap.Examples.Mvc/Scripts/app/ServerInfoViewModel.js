@@ -1,24 +1,25 @@
-﻿linqtoldap.viewModels.serverInfoViewModel = (function () {
+﻿linqtoldap.viewModels.ServerInfoViewModel = function () {
     var self = this;
-    var keyValueViewModel = function (item) {
+    self.serverSettings = ko.observableArray([]);
+
+    var listItemViewModel = function (item) {
         return {
             key: item.Key,
             value: item.Value
         };
     };
-    
-    self.serverSettings = ko.observableArray([]);
 
-    $.getJSON('Api/ServerInfo/Get', function(data) {
+    alertify.log("Loading...", 'log', 1000);
+    $.getJSON('/api/serverinfo', function (data) {
         var array = [];
         $.each(data, function(index, item) {
-            array.push(new keyValueViewModel(item));
+            array.push(new listItemViewModel(item));
         });
         self.serverSettings(array);
     })
     .fail(function(jqxhr, textStatus, error) {
-        linqtoldap.displayError(textStatus + ' ' + error);
+        alertify.error(textStatus + ' ' + error);
     });
-
+    
     return self;
-})();
+};

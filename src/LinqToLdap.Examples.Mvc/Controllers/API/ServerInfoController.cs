@@ -24,26 +24,25 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
                                                                              "supportedAuthPasswordSchemes")
                     .Select(kvp =>
                                 {
-                                    string name = kvp.Key;
                                     if (kvp.Value is string)
                                     {
-                                        return new {name, value = kvp.Value.ToString()};
+                                        return new {kvp.Key, Value = kvp.Value.ToString()};
                                     }
                                     if (kvp.Value is IEnumerable<string>)
                                     {
-                                        return new { name, value = string.Join(", ", kvp.Value as IEnumerable<string>) };
+                                        return new { kvp.Key, Value = string.Join(", ", kvp.Value as IEnumerable<string>) };
                                     }
                                     if (kvp.Value is IEnumerable<byte>)
                                     {
-                                        return new { name, value = string.Join(", ", (kvp.Value as IEnumerable<byte>)) };
+                                        return new { kvp.Key, Value = string.Join(", ", (kvp.Value as IEnumerable<byte>)) };
                                     }
                                     if (kvp.Value is IEnumerable<byte[]>)
                                     {
                                         return
                                             new
                                                 {
-                                                    name,
-                                                    value =
+                                                    kvp.Key,
+                                                    Value =
                                                         string.Join(", ",
                                                                     (kvp.Value as IEnumerable<byte[]>).Select(
                                                                         b => string.Format("({0})", string.Join(", ", b))))
@@ -51,7 +50,7 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
 
                                     }
 
-                                    return new { name, value = kvp.Value == null ? "" : kvp.Value.ToString() };
+                                    return new { kvp.Key, Value = kvp.Value == null ? "" : kvp.Value.ToString() };
                                 })
                 .ToArray();
         }

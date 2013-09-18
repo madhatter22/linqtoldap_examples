@@ -1,0 +1,89 @@
+﻿@{
+    ViewBag.Title = "Users";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts
+{
+    @*<script id="itemTempalte" type="text/html">        
+        <form class="form-horizontal">
+            <div class="control-group">
+                <label class="control-label" for="inputEmail">Email</label>
+                <div class="controls">
+                    <input type="text" id="inputEmail" placeholder="Email">
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label" for="inputPassword">Password</label>
+                <div class="controls">
+                    <input type="password" id="inputPassword" placeholder="Password">
+                </div>
+            </div>
+            <div class="control-group">
+                <div class="controls">
+                    <label class="checkbox">
+                        <input type="checkbox"> Remember me
+                    </label>
+                    <button type="submit" class="btn">Sign in</button>
+                </div>
+            </div>
+        </form>
+    </script>*@
+    <script id="listTemplate" type="text/html">
+        
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#navUsers').closest('li').addClass('active');
+            var vm = new linqtoldap.viewModels.UsersViewModel();
+            ko.applyBindings(vm, $('#usersView')[0]);
+        });
+    </script>
+}
+
+<h1>Users</h1>
+<p>Here is a simple example of performing a search against users with paging.  Note that paging behaves very differently in LDAP.  A cookie (byte array) is provided by the server and must be sent to the server</p>
+<br/><br/>
+<div id="usersView">    
+    <div data-bind="visible: mode() === 'list'">
+        <div class="row-fluid">
+            <div>
+                <form class="form-search">
+                    <input type="text" class="search-query" placeholder="Search">
+                    <a class="btn btn-primary btn-small">Search</a>
+                </form>
+                <div class="control-group">
+                    <label class="control-label" for="customFilter">Custom Filter</label>
+                    <div class="controls">
+                        <input id="customFilter" type="checkbox" data-bind="checked: isCustomFilter">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row-fluid">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Distinguished Name</th>
+                        <th>Name</th>
+                    </tr>
+                </thead>
+                <tbody data-bind="foreach: items">
+                    <tr>
+                        <td><div class="text-center"><a class="btn btn-small" data-bind="click: load">View</a></div></td>
+                        <td data-bind="text: distinguishedName"/>
+                        <td data-bind="text: name"/>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="row-fluid">
+            <div class="offset10">
+                <form class="form-inline">
+                    <a class="btn btn-small" data-bind="click: getPage, enable: canLoadMore">Load More</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -5,9 +5,11 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function() {
-            $('#navAbout').addClass("active");
-            ko.applyBindings(new ServerInfoViewModel(), $('#serverSettings')[0]);
+        $(function () {
+            $('#navServerInfo').closest('li').addClass('active');
+            var vm = new linqtoldap.viewModels.ServerInfoViewModel();
+            //vm.load();
+            ko.applyBindings(vm, $('#serverInfoView')[0]);
         });
     </script>
 }
@@ -16,17 +18,17 @@
 
 <p>Here is a simple example of listing the server attributes. This will contain useful information about what the server can and cannot support.</p>
 <br/><br/>
-<table id="serverSettings" class="table">
+<table id="serverInfoView" class="table table-hover">
     <thead>
         <tr>
-            <td>Key</td>
-            <td>Value</td>
+            <th>Key</th>
+            <th>Value</th>
         </tr>
     </thead>
     <tbody data-bind="foreach: serverSettings">
         <tr>
-            <td data-bind="text: name"/>
-            <td data-bind="text: 'value'"/>
+            <td data-bind="text: key"/>
+            <td data-bind="text: value"/>
         </tr>
     </tbody>
 </table>

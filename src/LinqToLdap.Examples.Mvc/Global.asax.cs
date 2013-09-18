@@ -81,8 +81,8 @@ namespace LinqToLdap.Examples.Mvc
             // This is an extension method from the integration package as well.
             container.RegisterMvcAttributeFilterProvider();
 
-            DependencyResolver.SetResolver(
-                new SimpleInjectorDependencyResolver(container));
+            GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
+            DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
 
         }
     }
