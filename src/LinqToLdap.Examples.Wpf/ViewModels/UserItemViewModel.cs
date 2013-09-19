@@ -1,12 +1,7 @@
 ﻿using System;
-using System.DirectoryServices.Protocols;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
 using LinqToLdap.Examples.Models;
-using LinqToLdap.Examples.Wpf.Messages;
 
 namespace LinqToLdap.Examples.Wpf.ViewModels
 {
@@ -20,10 +15,8 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             _user = user;
             _close = close;
 
-            CloseCommand = new RelayCommand(_close);
+            CloseCommand = new RelayCommand(() => { if (_close != null) _close(); });
         }
-
-        public ICommand CloseCommand { get; private set; }
 
         public string DistinguishedName
         {
@@ -90,10 +83,13 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                 RaisePropertyChanged("TelephoneNumber");
             }
         }
-        
+
+        public ICommand CloseCommand { get; private set; }
+
         public override void Cleanup()
         {
             _close = null;
+            CloseCommand = null;
             base.Cleanup();
         }
     }

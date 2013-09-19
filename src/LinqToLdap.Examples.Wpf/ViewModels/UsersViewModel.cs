@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.ObjectModel;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using GalaSoft.MvvmLight.Command;
@@ -20,22 +19,20 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     public class UsersViewModel : ViewModel
     {
         private IMessenger _messenger;
-        private IDirectoryContext _context;
         private bool _isBusy;
 
-        public UsersViewModel() : this(Get<IMessenger>(), Get<IDirectoryContext>())
+        public UsersViewModel() : this(Get<IMessenger>())
         {
         }
 
-        public UsersViewModel(IMessenger messenger, IDirectoryContext context)
+        public UsersViewModel(IMessenger messenger)
         {
             _messenger = messenger;
-            _context = context;
 
             Users = new ObservableCollection<UserListViewModel>();
 
-            SearchCommand = new RelayCommand(LoadData, () => !_isBusy);
-            LoadData();
+            SearchCommand = new RelayCommand(() => { if (!_isBusy) LoadUsers(); });
+            LoadUsers();
         }
 
         private string _searchText;
@@ -62,38 +59,22 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             }
         }
 
-        private UserDisplayType _type;
-        public UserDisplayType Type
-        {
-            get { return _type; }
-            set
-            {
-                if (_type == value) return;
-                _type = value;
-                RaisePropertyChanged("Type");
-            }
-        }
-
         public ICommand SearchCommand { get; private set; }
         public ObservableCollection<UserListViewModel> Users { get; private set; }
 
-        private UserItemViewModel _currentUser;
-        public UserItemViewModel CurrentUser
+        private ViewModel _currentContent;
+        public ViewModel CurrentContent
         {
-            get { return _currentUser; }
+            get { return _currentContent; }
             set
             {
-                if (_currentUser != null)
-                {
-                    _currentUser.Cleanup();
-                }
-
-                _currentUser = value;
-                RaisePropertyChanged("CurrentUser");
+                if (_currentContent == value) return;
+                _currentContent = value;
+                RaisePropertyChanged("CurrentContent");
             }
         }
 
-        private void LoadData()
+        private void LoadUsers()
         {
             _messenger.Send(new ToggleBusyMessage());
             _isBusy = true;
@@ -101,31 +82,33 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                 .StartNew(
                     () =>
                         {
-                            var query = _context.Query<User>();
-                            if (!string.IsNullOrWhiteSpace(SearchText))
+                            using (var context = Get<IDirectoryContext>())
                             {
-                                if (CustomFilter)
+                                var query = context.Query<User>();
+                                if (!string.IsNullOrWhiteSpace(SearchText))
                                 {
-                                    //by default filters passed to the Where clause are not cleaned.
-                                    //if your users don't understand valid filters I would go with fixed search options.
-                                    query = query.Where(SearchText);
-                                }
-                                else
-                                {
-                                    //very basic support for searching by first and last name
-                                    var split = SearchText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                    if (CustomFilter)
+                                    {
+                                        //by default filters passed to the Where clause are not cleaned.
+                                        //if your users don't understand valid filters I would go with fixed search options.
+                                        query = query.Where(SearchText);
+                                    }
+                                    else
+                                    {
+                                        var split = SearchText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-                                    var expression = PredicateBuilder.Create<User>();
-                                    expression = split.Length == 2
-                                        ? expression.And(s => s.FirstName.StartsWith(split[0]) && s.LastName.StartsWith(split[1]))
-                                        : split.Aggregate(expression, (current, t) => current.Or(s => s.FirstName.StartsWith(t) || s.LastName.StartsWith(t)));
+                                        var expression = PredicateBuilder.Create<User>();
+                                        expression = split.Length == 2
+                                            ? expression.And(s => s.FirstName.StartsWith(split[0]) && s.LastName.StartsWith(split[1]))
+                                            : split.Aggregate(expression, (current, t) => current.Or(s => s.UserId == t || s.FirstName.StartsWith(t) || s.LastName.StartsWith(t)));
 
-                                    query = query.Where(expression);
+                                        query = query.Where(expression);
+                                    }
                                 }
+
+                                return query.Select(s => new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName, LoadUser))
+                                         .ToList();
                             }
-
-                            return query.Select(s => new UserListViewModel(s.DistinguishedName, s.FirstName, s.LastName, ShowUser))
-                                     .ToList();
                         })
                 .ContinueWith(
                     t =>
@@ -139,25 +122,23 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                             }
 
                             Users.Clear();
-
                             foreach (var userListViewModel in t.Result)
                             {
                                 Users.Add(userListViewModel);
                             }
+                            ChangeView(this);
                         }, TaskScheduler.FromCurrentSynchronizationContext());
-        }
-
-        private void ShowUser(string dn)
-        {
-            
         }
 
         private void LoadUser(string id)
         {
             _messenger.Send(new ToggleBusyMessage());
             Task.Factory
-                .StartNew(
-                    () => _context.Query<User>().FirstOrDefault(u => u.UserId == id))
+                .StartNew(() =>
+                    {
+                        using (var context = Get<IDirectoryContext>())
+                            return context.Query<User>().FirstOrDefault(u => u.UserId == id);
+                    })
                 .ContinueWith(
                     t =>
                     {
@@ -176,23 +157,23 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                         }
                         else
                         {
-                            if (CurrentUser != null) CurrentUser.Cleanup();
-                            CurrentUser = new UserItemViewModel(user, CloseUser);
-                            Type = UserDisplayType.User;
+                            ChangeView(new UserItemViewModel(user, () => ChangeView(this)));
                         }
                     });
         }
 
-        private void CloseUser()
+        private void ChangeView(ViewModel vm)
         {
-            Type = UserDisplayType.List;
-            CurrentUser = null;
+            if (CurrentContent != null && CurrentContent != this) CurrentContent.Cleanup();
+
+            CurrentContent = vm;
         }
 
         public override void Cleanup()
         {
             _messenger = null;
-            _context.Dispose();
+            if (CurrentContent != null && CurrentContent != this) CurrentContent.Cleanup();
+
             base.Cleanup();
         }
     }

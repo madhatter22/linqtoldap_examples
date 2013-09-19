@@ -2,33 +2,37 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using LinqToLdap.Examples.Wpf.Helpers;
 using LinqToLdap.Examples.Wpf.Messages;
-using LinqToLdap.Logging;
 
 namespace LinqToLdap.Examples.Wpf.ViewModels
 {
     public class MainViewModel : ViewModel
     {
         private IMessenger _messenger;
-        private SimpleTextLogger _logger;
+        private CustomTextLogger _logger;
 
-        public MainViewModel() : this(Get<IMessenger>(), Get<SimpleTextLogger>())
+        public MainViewModel()
+            : this(Get<IMessenger>(), Get<CustomTextLogger>())
         {
         }
 
-        public MainViewModel(IMessenger messenger, SimpleTextLogger logger)
+        public MainViewModel(IMessenger messenger, CustomTextLogger logger)
         {
             _messenger = messenger;
             _logger = logger;
+            _logger.TraceEnabled = false;
 
             _messenger.Register<ToggleBusyMessage>(this, HandleToggleBusyMessage);
 
             ShowServerInfoCommand = new RelayCommand(ChangeView<ServerInfoViewModel>);
             ShowUsersCommand = new RelayCommand(ChangeView<UsersViewModel>);
+            ShowPerformanceCommand = new RelayCommand(ChangeView<PerformanceViewModel>);
         }
 
         public ICommand ShowServerInfoCommand { get; private set; }
         public ICommand ShowUsersCommand { get; private set; }
+        public ICommand ShowPerformanceCommand { get; private set; }
 
         private bool _isBusy;
         public bool IsBusy
@@ -63,10 +67,6 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             get { return _currentView; }
             set
             {
-                if (_currentView != null)
-                {
-                    _currentView.Cleanup();
-                }
                 _currentView = value;
                 RaisePropertyChanged("CurrentView");
             }
@@ -81,6 +81,10 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         {
             if (!IsBusy)
             {
+                if (CurrentView != null)
+                {
+                    CurrentView.Cleanup();
+                }
                 CurrentView = new T();
             }
         }

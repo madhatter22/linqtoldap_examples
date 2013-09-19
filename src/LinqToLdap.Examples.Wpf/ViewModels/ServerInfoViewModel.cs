@@ -16,7 +16,6 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public ServerInfoViewModel(IMessenger messenger)
         {
             _messenger = messenger;
-            _messenger.Send(new ToggleBusyMessage());
 
             ServerSettings = new ObservableCollection<KeyValueViewModel>();
             PopulateData();
@@ -26,22 +25,30 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private void PopulateData()
         {
+            _messenger.Send(new ToggleBusyMessage());
             Task.Factory
                 .StartNew(
                     () =>
                         {
-                            using (var directoryContext = Get<IDirectoryContext>())
-                            {
-                                //you can call ListServerAttributes to get this information, 
-                                //but I wanted to give an example of a dynamic query
+                            using (var context = Get<IDirectoryContext>())
+                                return context.ListServerAttributes("altServer", "objectClass", "namingContexts",
+                                                                    "supportedControl", "supportedExtension",
+                                                                    "supportedLDAPVersion",
+                                                                    "supportedSASLMechanisms", "vendorName",
+                                                                    "vendorVersion",
+                                                                    "supportedAuthPasswordSchemes");
 
-                                return directoryContext.ListServerAttributes("altServer", "objectClass", "namingContexts",
-                                                                             "supportedControl", "supportedExtension",
-                                                                             "supportedLDAPVersion",
-                                                                             "supportedSASLMechanisms", "vendorName",
-                                                                             "vendorVersion",
-                                                                             "supportedAuthPasswordSchemes");
-                            }
+                            /********************************************************************************
+                            under the covers this actually executes a query that looks something like this:
+                            
+                            _context.Query(null, SearchScope.Base)
+                                    .Where("(objectClass=*)")
+                                    .Select("namingContexts", "supportedControl", "supportedExtension", "supportedLDAPVersion",
+                                            "supportedSASLMechanisms", "vendorName", "vendorVersion", "supportedAuthPasswordSchemes")
+                                    .FirstOrDefault();
+                            
+                            null or empty naming contexts are not supported using the normal Query method, however.
+                            *********************************************************************************/
                         })
                 .ContinueWith(
                     t =>
@@ -64,6 +71,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public override void Cleanup()
         {
             _messenger = null;
+
             base.Cleanup();
         }
     }

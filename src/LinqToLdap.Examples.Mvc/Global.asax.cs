@@ -62,8 +62,8 @@ namespace LinqToLdap.Examples.Mvc
                           new System.Net.NetworkCredential(
                               "CN=stuart,OU=Users,DC=testathon,DC=net",
                               "stuart"))
-                      //.MinPoolSizeIs(1)
-                      //.MaxPoolSizeIs(5)
+                      .MinPoolSizeIs(1)
+                      .MaxPoolSizeIs(5)
                       .UsePort(389)
                       .ProtocolVersion(3);
 

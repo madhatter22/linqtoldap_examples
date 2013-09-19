@@ -8,12 +8,14 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     {
         private Action<string> _show;
 
-        public UserListViewModel(string dn, string firstName, string lastName, Action<string> show)
+        public UserListViewModel(string dn, string userId, string firstName, string lastName, Action<string> show)
         {
-            Refresh(dn, firstName, lastName);
-            _show = show;
+            DistinguishedName = dn;
+            UserId = userId;
+            Name = string.Format("{0} {1}", firstName, lastName);
 
-            ShowCommand = new RelayCommand(() => _show(DistinguishedName));
+            _show = show;
+            ShowCommand = new RelayCommand(() => _show(UserId));
         }
 
         public ICommand ShowCommand { get; private set; }
@@ -30,6 +32,18 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             }
         }
 
+        private string _userId;
+        public string UserId
+        {
+            get { return _userId; }
+            set
+            {
+                if (_userId == value) return;
+                _userId = value;
+                RaisePropertyChanged("UserId");
+            }
+        }
+
         private string _name;
         public string Name
         {
@@ -40,12 +54,6 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                 _name = value;
                 RaisePropertyChanged("Name");
             }
-        }
-
-        public void Refresh(string dn, string firstName, string lastName)
-        {
-            DistinguishedName = dn;
-            Name = string.Format("{0} {1}", firstName, lastName);
         }
 
         public override void Cleanup()

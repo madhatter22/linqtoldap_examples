@@ -4,9 +4,6 @@ namespace LinqToLdap.Examples.Mvc.Controllers
 {
     public class HomeController : Controller
     {
-        //
-        // GET: /Home/
-
         public ActionResult About()
         {
             return View();

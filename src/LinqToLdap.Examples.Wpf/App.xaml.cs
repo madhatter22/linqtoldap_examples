@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using GalaSoft.MvvmLight.Messaging;
 using LinqToLdap.Examples.Models;
+using LinqToLdap.Examples.Wpf.Helpers;
 using LinqToLdap.Examples.Wpf.Messages;
 using LinqToLdap.Examples.Wpf.ViewModels;
 using LinqToLdap.Examples.Wpf.Views;
@@ -35,7 +36,7 @@ namespace LinqToLdap.Examples.Wpf
         private void CreateContainer(object sender, StartupEventArgs e)
         {
             var container = new Container();
-            container.RegisterSingle(() => new SimpleTextLogger(Console.Out));
+            container.RegisterSingle(() => new CustomTextLogger(Console.Out));
 
             container.RegisterSingle<IMessenger>(() => Messenger.Default);
 
@@ -43,7 +44,7 @@ namespace LinqToLdap.Examples.Wpf
             {
                 var config = new LdapConfiguration()
                     .MaxPageSizeIs(500)
-                    .LogTo(container.GetInstance<SimpleTextLogger>());
+                    .LogTo(container.GetInstance<CustomTextLogger>());
 
                 //note the optional parameters on AddMapping.
                 //We can perform "late" mapping on certain values, 
@@ -57,7 +58,7 @@ namespace LinqToLdap.Examples.Wpf
                           new System.Net.NetworkCredential(
                               "CN=stuart,OU=Users,DC=testathon,DC=net",
                               "stuart"))
-                      .MinPoolSizeIs(1)
+                      .MinPoolSizeIs(0)
                       .MaxPoolSizeIs(5)
                       .UsePort(389)
                       .ProtocolVersion(3);

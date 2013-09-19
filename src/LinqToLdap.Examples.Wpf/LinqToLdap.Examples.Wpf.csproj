@@ -54,6 +54,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.DirectoryServices.Protocols" />
     <Reference Include="System.Windows.Interactivity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\MvvmLightLibs.4.1.27.0\lib\net40\System.Windows.Interactivity.dll</HintPath>
@@ -93,12 +94,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Helpers\CustomLogger.cs" />
     <Compile Include="Messages\DialogMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\ToggleBusyMessage.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\KeyValueViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
+    <Compile Include="ViewModels\PerformanceViewModel.cs" />
     <Compile Include="ViewModels\ServerInfoViewModel.cs" />
     <Compile Include="ViewModels\UserItemViewModel.cs" />
     <Compile Include="ViewModels\UserListViewModel.cs" />
@@ -109,6 +112,9 @@
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PerformanceView.xaml.cs">
+      <DependentUpon>PerformanceView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\ServerInfoView.xaml.cs">
       <DependentUpon>ServerInfoView.xaml</DependentUpon>
@@ -138,6 +144,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\MainView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PerformanceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
