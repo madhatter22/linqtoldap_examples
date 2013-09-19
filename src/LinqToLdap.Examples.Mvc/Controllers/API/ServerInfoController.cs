@@ -16,12 +16,14 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
         // GET api/<controller>
         public IEnumerable<object> Get()
         {
+            //something to cause a conflict
             return _context.ListServerAttributes("altServer", "objectClass", "namingContexts",
                                                                              "supportedControl", "supportedExtension",
                                                                              "supportedLDAPVersion",
                                                                              "supportedSASLMechanisms", "vendorName",
                                                                              "vendorVersion",
                                                                              "supportedAuthPasswordSchemes")
+                                                                             //more conflict
                     .Select(kvp =>
                                 {
                                     if (kvp.Value is string)
