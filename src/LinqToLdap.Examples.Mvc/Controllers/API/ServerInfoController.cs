@@ -16,44 +16,11 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
         // GET api/<controller>
         public IEnumerable<object> Get()
         {
-            //something to cause a conflict
             return _context.ListServerAttributes("altServer", "objectClass", "namingContexts",
-                                                                             "supportedControl", "supportedExtension",
-                                                                             "supportedLDAPVersion",
-                                                                             "supportedSASLMechanisms", "vendorName",
-                                                                             "vendorVersion",
-                                                                             "supportedAuthPasswordSchemes")
-                                                                             //more conflict
-                    .Select(kvp =>
-                                {
-                                    if (kvp.Value is string)
-                                    {
-                                        return new {kvp.Key, Value = kvp.Value.ToString()};
-                                    }
-                                    if (kvp.Value is IEnumerable<string>)
-                                    {
-                                        return new { kvp.Key, Value = string.Join(", ", kvp.Value as IEnumerable<string>) };
-                                    }
-                                    if (kvp.Value is IEnumerable<byte>)
-                                    {
-                                        return new { kvp.Key, Value = string.Join(", ", (kvp.Value as IEnumerable<byte>)) };
-                                    }
-                                    if (kvp.Value is IEnumerable<byte[]>)
-                                    {
-                                        return
-                                            new
-                                                {
-                                                    kvp.Key,
-                                                    Value =
-                                                        string.Join(", ",
-                                                                    (kvp.Value as IEnumerable<byte[]>).Select(
-                                                                        b => string.Format("({0})", string.Join(", ", b))))
-                                                };
-
-                                    }
-
-                                    return new { kvp.Key, Value = kvp.Value == null ? "" : kvp.Value.ToString() };
-                                })
+                                                 "supportedControl", "supportedExtension",
+                                                 "supportedLDAPVersion","supportedSASLMechanisms", "vendorName",
+                                                 "vendorVersion", "supportedAuthPasswordSchemes")
+                    .Select(SelectProjection)
                 .ToArray();
 
             //under the covers this actually executes a query that looks something like this:
@@ -65,6 +32,33 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             //        .FirstOrDefault();
             //
             //null or empty naming contexts are not supported using the normal Query method.
+        }
+
+        private static object SelectProjection(KeyValuePair<string, object> kvp)
+        {
+            if (kvp.Value is string)
+            {
+                return new { kvp.Key, Value = kvp.Value.ToString() };
+            }
+            if (kvp.Value is IEnumerable<string>)
+            {
+                return new { kvp.Key, Value = string.Join(", ", kvp.Value as IEnumerable<string>) };
+            }
+            if (kvp.Value is IEnumerable<byte>)
+            {
+                return new { kvp.Key, Value = string.Join(", ", (kvp.Value as IEnumerable<byte>)) };
+            }
+            if (kvp.Value is IEnumerable<byte[]>)
+            {
+                return new
+                    {
+                        kvp.Key,
+                        Value = string.Join(", ", (kvp.Value as IEnumerable<byte[]>)
+                                                      .Select(b => string.Format("({0})", string.Join(", ", b))))
+                    };
+            }
+
+            return new { kvp.Key, Value = kvp.Value == null ? "" : kvp.Value.ToString() };
         }
     }
 }

@@ -5,20 +5,23 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
              d:DesignHeight="600" d:DesignWidth="800">
-    <Grid>
+    <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Style="{StaticResource Header}">Connection Factory vs. Pooled Connection Factory</TextBlock>
+        <TextBlock Grid.Row="0" Style="{StaticResource Header}">Connection Factory vs. Pooled Connection Factory vs. Directory Entry</TextBlock>
+        <StackPanel Orientation="Vertical" Grid.Row="1">
+            <Button Command="{Binding ConnectionPoolCommand}">Go!</Button>
+            <TextBox Text="{Binding FactoryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="150" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>
+        </StackPanel>
         
-        
-        <TextBlock Grid.Row="2" Style="{StaticResource Header}">DirectoryEntry vs. LINQ to LDAP</TextBlock>
+        <TextBlock Grid.Row="2" Style="{StaticResource Header}">DirectoryEntry vs. LINQ to LDAP vs. Raw S.DS.P</TextBlock>
         <StackPanel Orientation="Vertical" Grid.Row="3">
             <Button Command="{Binding DirectoryEntryCommand}">Go!</Button>
-            <TextBox Text="{Binding DirectoryEntryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="200" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>
+            <TextBox Text="{Binding DirectoryEntryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="150" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>
         </StackPanel>
     </Grid>
 </UserControl>
