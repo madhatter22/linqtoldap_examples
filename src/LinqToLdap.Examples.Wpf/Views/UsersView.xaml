@@ -87,9 +87,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <DockPanel LastChildFill="False" Grid.Row="0" Margin="5">
-            <TextBlock Style="{StaticResource Header}" DockPanel.Dock="Left">Users</TextBlock>
-        </DockPanel>
+        <StackPanel Grid.Row="0" Margin="5">
+            <TextBlock Style="{StaticResource Header}" Grid.Row="0">Users</TextBlock>
+            <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
+                Here is a simple example of performing a search against users. Code is in /ViewModels/UsersViewModel.cs.
+            </TextBlock>
+        </StackPanel>
         <ContentControl Content="{Binding CurrentContent, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" Margin="5"/>
     </Grid>
 </UserControl>

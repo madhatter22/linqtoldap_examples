@@ -10,7 +10,10 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Style="{StaticResource Header}" Grid.Row="0" Margin="5">Server Attributes</TextBlock>
+        <StackPanel Grid.Row="0" Margin="5">
+            <TextBlock Style="{StaticResource Header}">Server Info</TextBlock>
+            <TextBlock Margin="5" TextWrapping="WrapWithOverflow">Here is a simple example of listing the server attributes. This will contain useful information about what the server can and cannot support. Code is in /ViewModels/ServerInfoViewModel.cs</TextBlock>
+        </StackPanel>
         <ListView Grid.Row="1" ItemsSource="{Binding ServerSettings}" Margin="5">
             <ListView.View>
                 <GridView>

@@ -9,17 +9,18 @@
         @Styles.Render("~/Content/bootstrap/responsive")
         @Styles.Render("~/Content/alertify/core")
         @Styles.Render("~/Content/alertify/theme")
-        @*@Scripts.Render("~/bundles/modernizr")*@
     </head>
     <body>
         <div class="navbar" role="navigation">
             <div class="navbar-inner">
-                <a class="brand">LINQ to LDAP MVC Examples</a>
-                <ul class="nav">
-                    <li>@Html.ActionLink("About", "About", "Home", null, new{id = "navAbout"})</li>
-                    <li>@Html.ActionLink("Server Info", "ServerInfo", "Home", null, new{id = "navServerInfo"})</li>
-                    <li>@Html.ActionLink("Users", "Users", "Home", null, new{id = "navUsers"})</li>
-                </ul>
+                <div class="container">
+                    <a class="brand">LINQ to LDAP MVC Examples</a>
+                    <ul class="nav">
+                        <li>@Html.ActionLink("About", "About", "Home", null, new{id = "navAbout"})</li>
+                        <li>@Html.ActionLink("Server Info", "ServerInfo", "Home", null, new{id = "navServerInfo"})</li>
+                        <li>@Html.ActionLink("Users", "Users", "Home", null, new{id = "navUsers"})</li>
+                    </ul>
+                </div>
             </div>
         </div>
         <div class="container">

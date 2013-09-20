@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:views="clr-namespace:LinqToLdap.Examples.Wpf.Views"
         xmlns:viewModels="clr-namespace:LinqToLdap.Examples.Wpf.ViewModels"
-        Title="MainView" Height="600" Width="800">
+        Title="MainView" Height="768" Width="1024">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:ServerInfoViewModel}">
             <views:ServerInfoView/>
@@ -33,7 +33,7 @@
                     <Button Command="{Binding Path=ShowPerformanceCommand}">Performance</Button>
                 </StackPanel>
             </StackPanel>
-            <ContentControl Grid.Row="1" Content="{Binding Path=CurrentView, UpdateSourceTrigger=PropertyChanged}"/>
+            <ContentControl Margin="10" Grid.Row="1" Content="{Binding Path=CurrentView, UpdateSourceTrigger=PropertyChanged}"/>
         </Grid>
     </xctk:BusyIndicator>
 </Window>

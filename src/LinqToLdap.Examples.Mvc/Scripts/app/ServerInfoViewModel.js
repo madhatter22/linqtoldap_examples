@@ -10,12 +10,13 @@
     };
 
     alertify.log("Loading...", 'log', 1000);
-    $.getJSON('/api/serverinfo', function (data) {
-        self.serverSettings($.map(data, function (item) { return new ListItemViewModel(item); }));
-    })
-    .fail(function(jqxhr, textStatus, error) {
-        alertify.error(textStatus + ' ' + error);
-    });
+    $.getJSON('/api/serverinfo')
+        .success(function(data) {
+            self.serverSettings($.map(data, function(item) { return new ListItemViewModel(item); }));
+        })
+        .fail(function(jqxhr, textStatus, error) {
+            alertify.error(textStatus + ': ' + error);
+        });
     
     return self;
 };

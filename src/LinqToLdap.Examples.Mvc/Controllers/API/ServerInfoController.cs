@@ -13,15 +13,14 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             _context = context;
         }
 
-        // GET api/<controller>
         public IEnumerable<object> Get()
         {
             return _context.ListServerAttributes("altServer", "objectClass", "namingContexts",
                                                  "supportedControl", "supportedExtension",
-                                                 "supportedLDAPVersion","supportedSASLMechanisms", "vendorName",
+                                                 "supportedLDAPVersion", "supportedSASLMechanisms", "vendorName",
                                                  "vendorVersion", "supportedAuthPasswordSchemes")
-                    .Select(SelectProjection)
-                .ToArray();
+                           .Select(SelectProjection)
+                           .ToArray();
 
             //under the covers this actually executes a query that looks something like this:
             //
@@ -31,7 +30,7 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             //                "supportedSASLMechanisms", "vendorName", "vendorVersion", "supportedAuthPasswordSchemes")
             //        .FirstOrDefault();
             //
-            //null or empty naming contexts are not supported using the normal Query method.
+            //null or empty naming contexts are not supported using the normal Query method, however.
         }
 
         private static object SelectProjection(KeyValuePair<string, object> kvp)

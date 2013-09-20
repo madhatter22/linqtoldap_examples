@@ -9,7 +9,6 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 {
     public class MainViewModel : ViewModel
     {
-        private IMessenger _messenger;
         private CustomTextLogger _logger;
 
         public MainViewModel()
@@ -19,17 +18,20 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         public MainViewModel(IMessenger messenger, CustomTextLogger logger)
         {
-            _messenger = messenger;
             _logger = logger;
             _logger.TraceEnabled = false;
 
-            _messenger.Register<ToggleBusyMessage>(this, HandleToggleBusyMessage);
+            messenger.Register<ToggleBusyMessage>(this, HandleToggleBusyMessage);
 
+            ShowAboutCommand = new RelayCommand(ChangeView<AboutViewModel>);
             ShowServerInfoCommand = new RelayCommand(ChangeView<ServerInfoViewModel>);
             ShowUsersCommand = new RelayCommand(ChangeView<UsersViewModel>);
             ShowPerformanceCommand = new RelayCommand(ChangeView<PerformanceViewModel>);
+
+            ChangeView<AboutViewModel>();
         }
 
+        public ICommand ShowAboutCommand { get; private set; }
         public ICommand ShowServerInfoCommand { get; private set; }
         public ICommand ShowUsersCommand { get; private set; }
         public ICommand ShowPerformanceCommand { get; private set; }
@@ -81,12 +83,30 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         {
             if (!IsBusy)
             {
-                if (CurrentView != null)
-                {
-                    CurrentView.Cleanup();
-                }
+                var oldView = CurrentView;
                 CurrentView = new T();
+                if (oldView != null)
+                {
+                    oldView.Cleanup();
+                }
             }
+        }
+
+        public bool CanClose()
+        {
+            return !IsBusy;
+        }
+
+        public override void Cleanup()
+        {
+            var oldView = CurrentView;
+            CurrentView = null;
+            if (oldView != null)
+            {
+                oldView.Cleanup();
+            }
+
+            base.Cleanup();
         }
     }
 }

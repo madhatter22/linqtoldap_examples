@@ -5,8 +5,6 @@ namespace LinqToLdap.Examples.Models
     [DirectorySchema("OU=users,DC=testathon,DC=net", ObjectClass = "inetOrgPerson")]
     public class User : DirectoryObject
     {
-        //All attributes marked as read only to 
-
         [DirectoryAttribute("cn", ReadOnly = true)]
         public string CommonName { get; set; }
 

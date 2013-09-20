@@ -95,9 +95,11 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Helpers\CustomLogger.cs" />
+    <Compile Include="Helpers\ObjectDumper.cs" />
     <Compile Include="Messages\DialogMessage.cs" />
     <Compile Include="Messages\ErrorMessage.cs" />
     <Compile Include="Messages\ToggleBusyMessage.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\DialogViewModel.cs" />
     <Compile Include="ViewModels\KeyValueViewModel.cs" />
     <Compile Include="ViewModels\MainViewModel.cs" />
@@ -107,8 +109,8 @@
     <Compile Include="ViewModels\UserListViewModel.cs" />
     <Compile Include="ViewModels\UsersViewModel.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
-    <Compile Include="Views\DialogView.xaml.cs">
-      <DependentUpon>DialogView.xaml</DependentUpon>
+    <Compile Include="Views\AboutView.xaml.cs">
+      <DependentUpon>AboutView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
@@ -139,7 +141,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\DialogView.xaml">
+    <Page Include="Views\AboutView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

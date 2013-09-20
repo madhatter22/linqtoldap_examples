@@ -24,6 +24,20 @@ namespace LinqToLdap.Examples.Wpf.Views
             InitializeComponent();
 
             DataContext = viewModel;
+
+            this.Closing += MainView_Closing;
+        }
+
+        private void MainView_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            var vm = DataContext as MainViewModel;
+            if (!vm.CanClose())
+            {
+                e.Cancel = true;
+                return;
+            }
+
+            vm.Cleanup();
         }
     }
 }
