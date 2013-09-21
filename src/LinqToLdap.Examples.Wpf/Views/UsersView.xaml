@@ -88,7 +88,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="5">
-            <TextBlock Style="{StaticResource Header}" Grid.Row="0">Users</TextBlock>
+            <TextBlock Style="{StaticResource Header}">Users</TextBlock>
             <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
                 Here is a simple example of performing a search against users. Code is in /ViewModels/UsersViewModel.cs.
             </TextBlock>
