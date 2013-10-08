@@ -15,13 +15,16 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 {
     public class PerformanceViewModel : ViewModel
     {
-        private const string Server = "ldap.virginia.edu";
-        private const string NamingContext = "o=University of Virginia,c=US";
+        private const string Server = "ldap.utexas.edu";
+        private const string NamingContext = "ou=people,dc=directory,dc=utexas,dc=edu";
+        private const int LoopCount = 5;
 
         private int _directoryEntryRunCount;
         private int _factoryRunCount;
         private long _directoryEntryRunTime;
-        private long _ldapRunTime;
+        private long _dynamicRunTime;
+        private long _anonymousRunTime;
+        private long _classRunTime;
         private long _sdspRunTime;
 
         private long _singleFactoryRunTime;
@@ -38,7 +41,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public PerformanceViewModel(IMessenger messenger)
         {
             _messenger = messenger;
-            DirectoryEntryCommand = new RelayCommand(DirEntryCompareWork);
+            DirectoryEntryCommand = new RelayCommand(DirectoryEntryCompareWork);
             ConnectionPoolCommand = new RelayCommand(ConnectionFactoryCompareWork);
         }
 
@@ -48,30 +51,82 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public ICommand DirectoryEntryCommand { get; private set; }
         public ICommand ConnectionPoolCommand { get; private set; }
 
-        private void DirEntryCompareWork()
+        private void DirectoryEntryCompareWork()
         {
             _messenger.Send(new ToggleBusyMessage());
 
             var dirEntryThread = new Thread(() =>
                 {
-                    Stopwatch watch = Stopwatch.StartNew();
-                    using (var entry = new DirectoryEntry(string.Format("LDAP://{0}/{1}", Server, NamingContext)))
+                    for (int i = 0; i < LoopCount; i++)
                     {
-                        entry.AuthenticationType = AuthenticationTypes.Anonymous;
-                        using (var s = new DirectorySearcher(entry, "(objectclass=*)"))
+                        var watch = Stopwatch.StartNew();
+                        using (var entry = new DirectoryEntry(string.Format("LDAP://{0}/{1}", Server, NamingContext)))
                         {
-                            s.SearchScope = SearchScope.Base;
-                            var result = s.FindOne();
-                            var match = new { o = result.Properties["o"][0].ToString(), };
+                            entry.AuthenticationType = AuthenticationTypes.Anonymous;
+                            using (var s = new DirectorySearcher(entry, "(objectclass=*)", new[]{"ou", "objectclass"}))
+                            {
+                                s.SearchScope = SearchScope.Base;
+                                var result = s.FindOne();
+                                var match = new
+                                                {
+                                                    Ou = result.Properties["ou"][0].ToString(),
+                                                    ObjectClass = result.Properties["objectclass"][0].ToString()
+                                                };
+                            }
                         }
+
+                        watch.Stop();
+                        _directoryEntryRunTime += watch.ElapsedMilliseconds;
                     }
-
-                    watch.Stop();
-
-                    _directoryEntryRunTime = watch.ElapsedMilliseconds;
                 });
 
-            var ldapThread = new Thread(() =>
+            var dynamicMappingThread = new Thread(() =>
+                {
+                    for (int i = 0; i < LoopCount; i++)
+                    {
+                        var watch = Stopwatch.StartNew();
+                        using (var connection = new LdapConnection(Server))
+                        {
+                            connection.SessionOptions.ProtocolVersion = 3;
+                            connection.AuthType = AuthType.Anonymous;
+
+                            var match = connection.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Base)
+                                          .Where(_ => Filter.EqualAnything(_, "objectclass"))
+                                          .Select(da => new { Ou = da.GetString("ou"), ObjectClass = da.GetString("objectclass") })
+                                          .FirstOrDefault();
+                        }
+                        watch.Stop();
+
+                        _dynamicRunTime += watch.ElapsedMilliseconds;
+                    }
+                });
+
+            var anonymousMappingThread = new Thread(() =>
+                {
+                    for (int i = 0; i < LoopCount; i++)
+                    {
+                        var watch = Stopwatch.StartNew();
+                        using (var connection = new LdapConnection(Server))
+                        {
+                            connection.SessionOptions.ProtocolVersion = 3;
+                            connection.AuthType = AuthType.Anonymous;
+
+                            using (var context = new DirectoryContext(connection))
+                            {
+                                var example = new { Ou = "", ObjectClass = "" };
+                                var match = context.Query(example, System.DirectoryServices.Protocols.SearchScope.Base, NamingContext)
+                                           .Where(e => e.ObjectClass != null)
+                                           .FirstOrDefault();
+                            }
+                        }
+                        watch.Stop();
+                        _anonymousRunTime += watch.ElapsedMilliseconds;
+                    }
+                });
+
+            var classMappingThread = new Thread(() =>
+            {
+                for (int i = 0; i < LoopCount; i++)
                 {
                     var watch = Stopwatch.StartNew();
                     using (var connection = new LdapConnection(Server))
@@ -79,55 +134,82 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                         connection.SessionOptions.ProtocolVersion = 3;
                         connection.AuthType = AuthType.Anonymous;
 
-                        var match = connection.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Base)
-                                      .Where(_ => Filter.Equal(_, "objectclass", "*"))
-                                      .WithoutPaging()
-                                      .Select(da => new { o = da.GetString("o") })
+                        using (var context = new DirectoryContext(connection))
+                        {
+                            var match = context.Query<SimpleClass>(System.DirectoryServices.Protocols.SearchScope.Base, NamingContext)
+                                      .Where(e => e.ObjectClass != null)
                                       .FirstOrDefault();
+                        }
                     }
                     watch.Stop();
-
-                    _ldapRunTime = watch.ElapsedMilliseconds;
-                });
+                    _classRunTime += watch.ElapsedMilliseconds;
+                }
+            });
 
             var sdspThread = new Thread(() =>
                 {
-                    var watch = Stopwatch.StartNew();
-                    using (var connection = new LdapConnection(Server))
+                    for (int i = 0; i < LoopCount; i++)
                     {
-                        connection.SessionOptions.ProtocolVersion = 3;
-                        connection.AuthType = AuthType.Anonymous;
+                        var watch = Stopwatch.StartNew();
+                        using (var connection = new LdapConnection(Server))
+                        {
+                            connection.SessionOptions.ProtocolVersion = 3;
+                            connection.AuthType = AuthType.Anonymous;
 
-                        var request = new SearchRequest
+                            var request = new SearchRequest
                             {
                                 Filter = "(objectclass=*)",
                                 DistinguishedName = NamingContext,
-                                Scope = System.DirectoryServices.Protocols.SearchScope.Base
+                                Scope = System.DirectoryServices.Protocols.SearchScope.Base,
                             };
-                        var response = connection.SendRequest(request) as SearchResponse;
-                        var entry = response.Entries[0];
-                        var match = new { o = (string)entry.Attributes["o"].GetValues(typeof(string))[0] };
+                            request.Attributes.AddRange(new[] { "ou", "objectclass" });
+                            request.Controls.Add(new PageResultRequestControl(1));
+                            var response = connection.SendRequest(request) as SearchResponse;
+                            var entry = response.Entries[0];
+                            var match = new
+                                            {
+                                                Ou = (string) entry.Attributes["ou"].GetValues(typeof (string))[0],
+                                                ObjectClass = (string) entry.Attributes["objectclass"].GetValues(typeof (string))[0]
+                                            };
+                        }
+                        watch.Stop();
+                        _sdspRunTime += watch.ElapsedMilliseconds;
                     }
-                    watch.Stop();
-
-                    _sdspRunTime = watch.ElapsedMilliseconds;
                 });
 
             Task.Factory.StartNew(() =>
                 {
+                    _directoryEntryRunTime = 0;
+                    _dynamicRunTime = 0;
+                    _anonymousRunTime = 0;
+                    _sdspRunTime = 0;
+                    _classRunTime = 0;
+                    _directoryEntryRunCount++;
+
                     dirEntryThread.Start();
                     while (dirEntryThread.IsAlive)
                     {
                     }
-                    ldapThread.Start();
-                    while (ldapThread.IsAlive)
-                    {
-                    }
+
                     sdspThread.Start();
                     while (sdspThread.IsAlive)
                     {
                     }
-                    _directoryEntryRunCount++;
+                    
+                    dynamicMappingThread.Start();
+                    while (dynamicMappingThread.IsAlive)
+                    {
+                    }
+                    
+                    anonymousMappingThread.Start();
+                    while (anonymousMappingThread.IsAlive)
+                    {
+                    }
+
+                    classMappingThread.Start();
+                    while (classMappingThread.IsAlive)
+                    {
+                    }
                 }, TaskCreationOptions.LongRunning)
                            .ContinueWith(t =>
                                {
@@ -137,11 +219,23 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                                    sb.AppendLine("=================================================");
                                    sb.AppendFormat("Directory Entry vs LINQ to LDAP Run #{0}", _directoryEntryRunCount);
                                    sb.AppendLine();
-                                   sb.AppendFormat("Directory Entry time: {0} ms", _directoryEntryRunTime);
-                                   sb.AppendLine();
-                                   sb.AppendFormat("LINQ to LDAP time: {0} ms", _ldapRunTime);
-                                   sb.AppendLine();
-                                   sb.AppendFormat("Raw S.DS.P time: {0} ms", _sdspRunTime);
+                                   if (t.Exception != null)
+                                   {
+                                       _messenger.Send(new ErrorMessage(t.Exception));
+                                       sb.AppendLine("Error");
+                                   }
+                                   else
+                                   {
+                                       sb.AppendFormat("Directory Entry time: {0} ms averaged over {1} runs", _directoryEntryRunTime / LoopCount, LoopCount);
+                                       sb.AppendLine();
+                                       sb.AppendFormat("Raw S.DS.P time: {0} ms averaged over {1} runs", _sdspRunTime / LoopCount, LoopCount);
+                                       sb.AppendLine();
+                                       sb.AppendFormat("LINQ to LDAP dynamic time: {0} ms averaged over {1} runs", _dynamicRunTime / LoopCount, LoopCount);
+                                       sb.AppendLine();
+                                       sb.AppendFormat("LINQ to LDAP anonymous time: {0} ms averaged over {1} runs", _anonymousRunTime / LoopCount, LoopCount);
+                                       sb.AppendLine();
+                                       sb.AppendFormat("LINQ to LDAP class time: {0} ms averaged over {1} runs", _classRunTime / LoopCount, LoopCount);
+                                   }
                                    sb.AppendLine();
                                    sb.AppendLine("=================================================");
                                    sb.AppendLine();
@@ -154,7 +248,6 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private void ConnectionFactoryCompareWork()
         {
-            const int totalRuns = 5;
             _singleFactoryRunTime = 0;
             _pooledFactoryRunTime = 0;
             _directoryEntryFactoryRunTime = 0;
@@ -177,24 +270,21 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
             Task.Factory.StartNew(() =>
             {
+                _factoryRunCount++;
                 singleFactoryThread1.Start();
-
                 while (singleFactoryThread1.IsAlive)
                 {
                 }
-
+                Thread.Sleep(1000);
                 pooledFactoryThread1.Start();
-
                 while (pooledFactoryThread1.IsAlive)
                 {
                 }
-
+                Thread.Sleep(1000);
                 directoryEntryThread1.Start();
-
                 while (directoryEntryThread1.IsAlive)
                 {
                 }
-                _factoryRunCount++;
             }, TaskCreationOptions.LongRunning)
                            .ContinueWith(t =>
                            {
@@ -204,11 +294,21 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                                sb.AppendLine("=================================================");
                                sb.AppendFormat("Pooled Factory vs. Standard Factory #{0}", _factoryRunCount);
                                sb.AppendLine();
-                               sb.AppendFormat("Pooled Factory time: {0} ms over {1} runs", _pooledFactoryRunTime, totalRuns);
-                               sb.AppendLine();
-                               sb.AppendFormat("Standard Factory time: {0} ms over {1} runs", _singleFactoryRunTime, totalRuns);
-                               sb.AppendLine();
-                               sb.AppendFormat("Directory Entry time: {0} ms over {1} runs", _directoryEntryFactoryRunTime, totalRuns);
+
+                               if (t.Exception != null)
+                               {
+                                   _messenger.Send(new ErrorMessage(t.Exception));
+                                   sb.AppendLine("Error");
+                               }
+                               else
+                               {
+                                   sb.AppendFormat("Pooled Factory time: {0} ms averaged over {1} runs", _pooledFactoryRunTime / LoopCount, LoopCount);
+                                   sb.AppendLine();
+                                   sb.AppendFormat("Standard Factory time: {0} ms averaged over {1} runs", _singleFactoryRunTime / LoopCount, LoopCount);
+                                   sb.AppendLine();
+                                   sb.AppendFormat("Directory Entry time: {0} ms averaged over {1} runs", _directoryEntryFactoryRunTime / LoopCount, LoopCount);
+                               }
+
                                sb.AppendLine();
                                sb.AppendLine("=================================================");
                                sb.AppendLine();
@@ -220,14 +320,14 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private void ConnectionFactoryWork(ILdapConfiguration configuration, int sleepTime)
         {
-            for (int i = 0; i <= 4; i++)
+            for (int i = 0; i < LoopCount; i++)
             {
                 var watch = Stopwatch.StartNew();
                 using (var context = configuration.CreateContext())
                 {
-                    var first = context.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Base)
-                           .WithoutPaging()
-                           .FirstOrDefault();
+                    var match = context.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Base)
+                                       .Select("ou", "objectclass")
+                                       .FirstOrDefault();
                 }
                 watch.Stop();
                 lock (_factoryLock)
@@ -247,7 +347,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private void DirectoryFactoryMultipleWork(int sleepTime)
         {
-            for (int i = 0; i <= 4; i++)
+            for (int i = 0; i < LoopCount; i++)
             {
                 var watch = Stopwatch.StartNew();
                 using (var entry = new DirectoryEntry(string.Format("LDAP://{0}/{1}", Server, NamingContext)))
@@ -256,6 +356,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
                     using (var searcher = new DirectorySearcher(entry))
                     {
+                        searcher.PropertiesToLoad.AddRange(new[]{"ou", "objectclass"});
                         searcher.SearchScope = SearchScope.Base;
                         var match = searcher.FindOne();
                     }
@@ -273,6 +374,12 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         {
             _messenger = null;
             base.Cleanup();
+        }
+
+        private class SimpleClass
+        {
+            public string Ou { get; set; }
+            public string ObjectClass { get; set; }
         }
     }
 }

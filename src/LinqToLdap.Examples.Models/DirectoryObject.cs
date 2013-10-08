@@ -2,7 +2,7 @@
 
 namespace LinqToLdap.Examples.Models
 {
-    public class DirectoryObject : DirectoryObjectBase
+    public abstract class DirectoryObject
     {
         [DistinguishedName]
         public string DistinguishedName { get; set; }

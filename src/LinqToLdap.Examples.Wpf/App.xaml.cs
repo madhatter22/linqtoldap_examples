@@ -73,7 +73,7 @@ namespace LinqToLdap.Examples.Wpf
                 return config;
             });
 
-            container.Register<IDirectoryContext>(() => new DirectoryContext(container.GetInstance<ILdapConfiguration>()));
+            container.Register<Func<IDirectoryContext>>(() => container.GetInstance<ILdapConfiguration>().CreateContext);
 
             Container = container;
 
@@ -101,6 +101,7 @@ namespace LinqToLdap.Examples.Wpf
                                         : (message.DialogType == DialogType.Error
                                                ? MessageBoxImage.Warning
                                                : MessageBoxImage.Information);
+
             Xceed.Wpf.Toolkit.MessageBox.Show(message.Message, message.Header, MessageBoxButton.OK, image);
         }
     }

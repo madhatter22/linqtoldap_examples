@@ -12,18 +12,17 @@
         </Grid.RowDefinitions>
         <StackPanel Grid.Row="0" Margin="5">
             <TextBlock Style="{StaticResource Header}">About</TextBlock>
-            <TextBlock Margin="5" TextWrapping="WrapWithOverflow">
-                Welcome to the LINQ to LDAP MVC Example.  Here you'll see some different ways to tackle using LINQ to LDAP in a desktop environment.<LineBreak/><LineBreak/>
-
+            <TextBlock TextWrapping="WrapWithOverflow">
+                Welcome to the LINQ to LDAP MVC Example.  Here you'll see some different ways to tackle using LINQ to LDAP in a desktop environment.<LineBreak/>
                 Check App.xaml.cs to see configuration and /ViewModels/ for code.
             </TextBlock>
         </StackPanel>
         <ItemsControl Grid.Row="1" ItemsSource="{Binding Path=Hyperlinks}" Margin="5">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <BulletDecorator Width="Auto">
-                        <BulletDecorator.Bullet>
-                            <Ellipse Fill="White" Stroke="Black" StrokeThickness="1" Width="8" Height="8"/>
+                    <BulletDecorator Width="Auto" VerticalAlignment="Center" Margin="5,0,0,0">
+                        <BulletDecorator.Bullet >
+                            <Ellipse Margin="-5,0,0,0" Fill="White" Stroke="Black" StrokeThickness="1" Width="8" Height="8"/>
                         </BulletDecorator.Bullet>
                         <TextBlock>
                             <Hyperlink Command="{Binding Path=LaunchCommand, Mode=OneTime}">

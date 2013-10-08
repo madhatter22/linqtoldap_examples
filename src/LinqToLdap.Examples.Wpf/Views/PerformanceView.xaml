@@ -12,13 +12,28 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBlock Grid.Row="0" Style="{StaticResource Header}">Connection Factory vs. Pooled Connection Factory vs. Directory Entry</TextBlock>
+        <StackPanel Grid.Row="0" Margin="5">
+            <TextBlock Style="{StaticResource Header}">Connection Factory Comparisons</TextBlock>
+            <TextBlock TextWrapping="WrapWithOverflow">
+                The section below will test the performance benefit of using the pooled connection factory vs. a standard connection factory.
+                The most expensive part of the query process is usually the initial authentication bind.  
+                By reusing connections you can bypass that process, thus improving overall performance and scalability.  
+                DirectoryEntry performance is also tested here since it has the ability to reuse connections under certain conditions.  
+                See the ConnectionFactoryCompareWork method in /ViewModels/PerformanceViewModel.cs for code.
+            </TextBlock>
+        </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="1">
             <Button Command="{Binding ConnectionPoolCommand}">Go!</Button>
             <TextBox Text="{Binding FactoryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="150" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>
         </StackPanel>
-        
-        <TextBlock Grid.Row="2" Style="{StaticResource Header}">DirectoryEntry vs. LINQ to LDAP vs. Raw S.DS.P</TextBlock>
+
+        <StackPanel Grid.Row="2" Margin="5">
+            <TextBlock Style="{StaticResource Header}">DirectoryEntry vs. LINQ to LDAP vs. Raw S.DS.P</TextBlock>
+            <TextBlock TextWrapping="WrapWithOverflow">
+                The section below will test the performance of using a DirectoryEntry, LINQ to LDAP, LINQ to LDAP with auto-mapping, and raw S.DS.P.
+                See the DirectoryEntryCompareWork method in /ViewModels/PerformanceViewModel.cs for code.
+            </TextBlock>
+        </StackPanel>
         <StackPanel Orientation="Vertical" Grid.Row="3">
             <Button Command="{Binding DirectoryEntryCommand}">Go!</Button>
             <TextBox Text="{Binding DirectoryEntryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="150" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>

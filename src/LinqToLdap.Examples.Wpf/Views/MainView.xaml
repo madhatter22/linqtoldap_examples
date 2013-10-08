@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         xmlns:views="clr-namespace:LinqToLdap.Examples.Wpf.Views"
         xmlns:viewModels="clr-namespace:LinqToLdap.Examples.Wpf.ViewModels"
+        WindowStartupLocation="CenterScreen"
         Title="MainView" Height="768" Width="1024">
     <Window.Resources>
         <DataTemplate DataType="{x:Type viewModels:ServerInfoViewModel}">
@@ -13,6 +14,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModels:PerformanceViewModel}">
             <views:PerformanceView/>
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModels:AboutViewModel}">
+            <views:AboutView/>
         </DataTemplate>
     </Window.Resources>
     <xctk:BusyIndicator IsBusy="{Binding Path=IsBusy}">
@@ -27,7 +31,7 @@
                     <CheckBox IsChecked="{Binding Path=EnableLogging}" DockPanel.Dock="Right" VerticalAlignment="Center">Enable Logging (see output window)</CheckBox>
                 </DockPanel>
                 <StackPanel Style="{StaticResource LeftAlignedButtonGroup}">
-                    <Button>About</Button>
+                    <Button Command="{Binding Path=ShowAboutCommand}">About</Button>
                     <Button Command="{Binding Path=ShowServerInfoCommand}">Server Info</Button>
                     <Button Command="{Binding Path=ShowUsersCommand}">Users</Button>
                     <Button Command="{Binding Path=ShowPerformanceCommand}">Performance</Button>

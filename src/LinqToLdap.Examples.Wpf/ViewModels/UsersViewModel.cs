@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -19,15 +20,17 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     public class UsersViewModel : ViewModel
     {
         private IMessenger _messenger;
+        private Func<IDirectoryContext> _contextFactory; 
         private bool _isBusy;
 
-        public UsersViewModel() : this(Get<IMessenger>())
+        public UsersViewModel() : this(Get<IMessenger>(), Get<Func<IDirectoryContext>>())
         {
         }
 
-        public UsersViewModel(IMessenger messenger)
+        public UsersViewModel(IMessenger messenger, Func<IDirectoryContext> contextFactory)
         {
             _messenger = messenger;
+            _contextFactory = contextFactory;
 
             Users = new ObservableCollection<UserListViewModel>();
 
@@ -78,11 +81,17 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         {
             _messenger.Send(new ToggleBusyMessage());
             _isBusy = true;
-            Task.Factory
+            LoadUsersAsync()
+                .ContinueWith(LoadUsersComplete, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        private Task<List<UserListViewModel>> LoadUsersAsync()
+        {
+            return Task.Factory
                 .StartNew(
                     () =>
                         {
-                            using (var context = Get<IDirectoryContext>())
+                            using (var context = _contextFactory())
                             {
                                 var query = context.Query<User>();
                                 if (!string.IsNullOrWhiteSpace(SearchText))
@@ -95,71 +104,90 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                                     }
                                     else
                                     {
-                                        var split = SearchText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
+                                        var split = SearchText.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
 
                                         var expression = PredicateBuilder.Create<User>();
                                         expression = split.Length == 2
-                                            ? expression.And(s => s.FirstName.StartsWith(split[0]) && s.LastName.StartsWith(split[1]))
-                                            : split.Aggregate(expression, (current, t) => current.Or(s => s.UserId == t || s.FirstName.StartsWith(t) || s.LastName.StartsWith(t)));
+                                                         ? expression.And(
+                                                             s =>
+                                                             s.FirstName.StartsWith(split[0]) &&
+                                                             s.LastName.StartsWith(split[1]))
+                                                         : split.Aggregate(expression,
+                                                                           (current, t) =>
+                                                                           current.Or(
+                                                                               s =>
+                                                                               s.UserId == t ||
+                                                                               s.FirstName.StartsWith(t) ||
+                                                                               s.LastName.StartsWith(t)));
 
                                         query = query.Where(expression);
                                     }
                                 }
 
-                                return query.Select(s => new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName, LoadUser))
+                                return
+                                    query.Select(
+                                        s =>
+                                        new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName,
+                                                              LoadUser))
                                          .ToList();
                             }
-                        })
-                .ContinueWith(
-                    t =>
-                        {
-                            _messenger.Send(new ToggleBusyMessage());
-                            _isBusy = false;
-                            if (t.Exception != null)
-                            {
-                                _messenger.Send(t.Exception);
-                                return;
-                            }
-
-                            Users.Clear();
-                            foreach (var userListViewModel in t.Result)
-                            {
-                                Users.Add(userListViewModel);
-                            }
-                            ChangeView(this);
-                        }, TaskScheduler.FromCurrentSynchronizationContext());
+                        });
         }
 
-        private void LoadUser(string id)
+        private void LoadUsersComplete(Task<List<UserListViewModel>> task)
         {
             _messenger.Send(new ToggleBusyMessage());
-            Task.Factory
+            _isBusy = false;
+            if (task.Exception != null)
+            {
+                _messenger.Send(task.Exception);
+                return;
+            }
+
+            Users.Clear();
+            foreach (var userListViewModel in task.Result)
+            {
+                Users.Add(userListViewModel);
+            }
+            ChangeView(this);
+        }
+
+        public void LoadUser(string id)
+        {
+            _messenger.Send(new ToggleBusyMessage());
+            LoadUserAsync(id)
+                .ContinueWith(t => LoadUserComplete(t, id), TaskScheduler.FromCurrentSynchronizationContext());
+        }
+
+        public Task<User> LoadUserAsync(string id)
+        {
+            return Task.Factory
                 .StartNew(() =>
-                    {
-                        using (var context = Get<IDirectoryContext>())
-                            return context.Query<User>().FirstOrDefault(u => u.UserId == id);
-                    })
-                .ContinueWith(
-                    t =>
-                    {
-                        _messenger.Send(new ToggleBusyMessage());
-                        if (t.Exception != null)
-                        {
-                            _messenger.Send(new ErrorMessage(t.Exception));
-                            return;
-                        }
+                              {
+                                  using (var context = _contextFactory())
+                                      return context.Query<User>().FirstOrDefault(u => u.UserId == id);
+                              });
+        }
 
-                        var user = t.Result;
+        public void LoadUserComplete(Task<User> task, string id)
+        {
+            _messenger.Send(new ToggleBusyMessage());
+            if (task.Exception != null)
+            {
+                _messenger.Send(new ErrorMessage(task.Exception));
+                return;
+            }
 
-                        if (user == null)
-                        {
-                            _messenger.Send(new Messages.DialogMessage(string.Format("{0} not found", id), "Not Found", DialogType.Error));
-                        }
-                        else
-                        {
-                            ChangeView(new UserItemViewModel(user, () => ChangeView(this)));
-                        }
-                    });
+            var user = task.Result;
+
+            if (user == null)
+            {
+                _messenger.Send(new Messages.DialogMessage(string.Format("{0} not found", id), "Not Found", DialogType.Error));
+            }
+            else
+            {
+                ChangeView(new UserItemViewModel(user, () => ChangeView(this)));
+            }
         }
 
         private void ChangeView(ViewModel vm)
@@ -172,6 +200,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public override void Cleanup()
         {
             _messenger = null;
+            _contextFactory = null;
             if (CurrentContent != null && CurrentContent != this) CurrentContent.Cleanup();
 
             base.Cleanup();
