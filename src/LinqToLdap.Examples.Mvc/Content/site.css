@@ -2,3 +2,8 @@
     max-height: 300px;
     overflow: auto;
 }
+
+input[type="radio"], input[type="checkbox"] {
+    line-height: normal;
+    margin: 0;
+}

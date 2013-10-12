@@ -4,11 +4,11 @@
     <head>
         <title>@ViewBag.Title</title>
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-        @Styles.Render("~/Content/site")
         @Styles.Render("~/Content/bootstrap/base")
         @Styles.Render("~/Content/bootstrap/responsive")
         @Styles.Render("~/Content/alertify/core")
         @Styles.Render("~/Content/alertify/theme")
+        @Styles.Render("~/Content/site")
     </head>
     <body>
         <div class="navbar" role="navigation">
@@ -20,6 +20,10 @@
                         <li>@Html.ActionLink("Server Info", "ServerInfo", "Home", null, new{id = "navServerInfo"})</li>
                         <li>@Html.ActionLink("Users", "Users", "Home", null, new{id = "navUsers"})</li>
                     </ul>
+                    <form class="navbar-form form-inline pull-right">
+                        <label class="control-label" for="traceEnabled">Enable Logging (see output window)</label>
+                        @Html.CheckBox("traceEnabled", (bool)ViewBag.TraceEnabled)
+                    </form>
                 </div>
             </div>
         </div>
@@ -32,6 +36,22 @@
         @Scripts.Render("~/bundles/knockout")
         @Scripts.Render("~/bundles/alertify")
         @Scripts.Render("~/bundles/linqtoldap")
+        <script type="text/javascript">
+            $(function() {
+                $('#traceEnabled').on('change', function () {
+                    var traceEnabled = $(this).is(':checked');
+                    $.ajax({
+                        url: '@Url.Action("TraceEnabled", "Home")',
+                        type: 'POST',
+                        data: { traceEnabled: traceEnabled }
+                    }).success(function() {
+                        alertify.log("Done", 'log', 1000);
+                    }).fail(function (jqxhr, textStatus, error) {
+                        alertify.error(textStatus + ': ' + error);
+                    });
+                });
+            });
+        </script>
         @RenderSection("scripts", required: false)
     </body>
 </html>

@@ -41,19 +41,28 @@ namespace LinqToLdap.Examples.Mvc
 
             var container = new Container();
 
+            container.RegisterSingle(() =>
+                                         {
+                                             var logger = new SimpleTextLogger(TraceWriter.Instance)
+                                                              {
+                                                                  TraceEnabled = false
+                                                              };
+                                             return logger;
+                                         });
+
             container.RegisterSingle<ILdapConfiguration>(() =>
             {
                 var config = new LdapConfiguration()
                     .MaxPageSizeIs(500)
-                    .LogTo(new SimpleTextLogger(DebugWriter.Instance));
+                    .LogTo(container.GetInstance<SimpleTextLogger>());
 
-                //note the optional parameters available on AddMapping.
+                //Note the optional parameters available on AddMapping.
                 //We can perform "late" mapping on certain values, 
                 //even for auto and attribute based mapping.
                 config.AddMapping(new OrganizationalUnitMap())
                       .AddMapping(new AttributeClassMap<User>());
 
-                // I'm explicitly mapping User here, but I can also let it 
+                // I explicitly mapped User, but I can also let it 
                 // get mapped the first time we query for users.
                 // This only applies to auto and attribute-based mapping.
 
@@ -76,15 +85,11 @@ namespace LinqToLdap.Examples.Mvc
                 (HttpContext.Current.Items[ConextRequestKey] as IDirectoryContext) ??
                     (HttpContext.Current.Items[ConextRequestKey] = new DirectoryContext(container.GetInstance<ILdapConfiguration>())) as IDirectoryContext);
 
-            // This is an extension method from the integration package.
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-
-            // This is an extension method from the integration package as well.
             container.RegisterMvcAttributeFilterProvider();
 
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
-
         }
     }
 }

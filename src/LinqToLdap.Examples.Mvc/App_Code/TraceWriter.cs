@@ -5,13 +5,13 @@ using System.Text;
 
 namespace LinqToLdap.Examples.Mvc
 {
-    public class DebugWriter : TextWriter
+    public class TraceWriter : TextWriter
     {
         /// <summary>
         /// Lazy instance of this class.
         /// 
         /// </summary>
-        public static DebugWriter Instance
+        public static TraceWriter Instance
         {
             get { return Nested.NestedInstance; }
         }
@@ -25,7 +25,7 @@ namespace LinqToLdap.Examples.Mvc
             get { return Encoding.Default; }
         }
 
-        private DebugWriter()
+        private TraceWriter()
         {
 
         }
@@ -38,7 +38,7 @@ namespace LinqToLdap.Examples.Mvc
         /// <param name="count">count</param>
         public override void Write(char[] buffer, int index, int count)
         {
-            Debug.Write(new String(buffer, index, count));
+            Trace.Write(new String(buffer, index, count));
         }
 
         /// <summary>
@@ -47,7 +47,7 @@ namespace LinqToLdap.Examples.Mvc
         /// <param name="value">The value.</param>
         public override void Write(string value)
         {
-            Debug.Write(value);
+            Trace.Write(value);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@ namespace LinqToLdap.Examples.Mvc
         /// <param name="count">count</param>
         public override void WriteLine(char[] buffer, int index, int count)
         {
-            Debug.WriteLine(new String(buffer, index, count));
+            Trace.WriteLine(new String(buffer, index, count));
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace LinqToLdap.Examples.Mvc
         /// <param name="value">The value.</param>
         public override void WriteLine(string value)
         {
-            Debug.WriteLine(value);
+            Trace.WriteLine(value);
         }
 
         /// <summary>
@@ -75,12 +75,12 @@ namespace LinqToLdap.Examples.Mvc
         /// </summary>
         public override void WriteLine()
         {
-            Debug.WriteLine(string.Empty);
+            Trace.WriteLine(string.Empty);
         }
 
         private class Nested
         {
-            internal static readonly DebugWriter NestedInstance = new DebugWriter();
+            internal static readonly TraceWriter NestedInstance = new TraceWriter();
 
             static Nested()
             {
