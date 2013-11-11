@@ -2,21 +2,21 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using LinqToLdap.Examples.Wpf.Helpers;
 using LinqToLdap.Examples.Wpf.Messages;
+using LinqToLdap.Logging;
 
 namespace LinqToLdap.Examples.Wpf.ViewModels
 {
     public class MainViewModel : ViewModel
     {
-        private CustomTextLogger _logger;
+        private ILinqToLdapLogger _logger;
 
         public MainViewModel()
-            : this(Get<IMessenger>(), Get<CustomTextLogger>())
+            : this(Get<IMessenger>(), Get<ILinqToLdapLogger>())
         {
         }
 
-        public MainViewModel(IMessenger messenger, CustomTextLogger logger)
+        public MainViewModel(IMessenger messenger, ILinqToLdapLogger logger)
         {
             _logger = logger;
             _logger.TraceEnabled = false;
@@ -99,6 +99,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         public override void Cleanup()
         {
+            _logger = null;
             var oldView = CurrentView;
             CurrentView = null;
             if (oldView != null)

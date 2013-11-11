@@ -5,9 +5,9 @@ namespace LinqToLdap.Examples.Mvc.Controllers
 {
     public class HomeController : Controller
     {
-        private SimpleTextLogger _logger;
+        private readonly ILinqToLdapLogger _logger;
 
-        public HomeController(SimpleTextLogger logger)
+        public HomeController(ILinqToLdapLogger logger)
         {
             _logger = logger;
         }

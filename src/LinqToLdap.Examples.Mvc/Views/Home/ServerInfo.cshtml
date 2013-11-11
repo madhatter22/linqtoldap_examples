@@ -26,7 +26,9 @@
     <tbody data-bind="foreach: serverSettings">
         <tr>
             <td data-bind="text: key"/>
-            <td data-bind="text: value"/>
+            <td>
+                <span style="white-space: pre-wrap" data-bind="text: value"></span>
+            </td>
         </tr>
     </tbody>
 </table>

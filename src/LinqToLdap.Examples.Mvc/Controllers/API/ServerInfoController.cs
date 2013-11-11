@@ -41,18 +41,18 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             }
             if (kvp.Value is IEnumerable<string>)
             {
-                return new { kvp.Key, Value = string.Join(", ", kvp.Value as IEnumerable<string>) };
+                return new { kvp.Key, Value = string.Join("\n", kvp.Value as IEnumerable<string>) };
             }
             if (kvp.Value is IEnumerable<byte>)
             {
-                return new { kvp.Key, Value = string.Join(", ", (kvp.Value as IEnumerable<byte>)) };
+                return new { kvp.Key, Value = string.Join("\n", (kvp.Value as IEnumerable<byte>)) };
             }
             if (kvp.Value is IEnumerable<byte[]>)
             {
                 return new
                     {
                         kvp.Key,
-                        Value = string.Join(", ", (kvp.Value as IEnumerable<byte[]>)
+                        Value = string.Join("\n", (kvp.Value as IEnumerable<byte[]>)
                                                       .Select(b => string.Format("({0})", string.Join(", ", b))))
                     };
             }

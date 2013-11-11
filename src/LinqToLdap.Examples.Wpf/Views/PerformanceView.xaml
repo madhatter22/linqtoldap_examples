@@ -30,7 +30,7 @@
         <StackPanel Grid.Row="2" Margin="5">
             <TextBlock Style="{StaticResource Header}">DirectoryEntry vs. LINQ to LDAP vs. Raw S.DS.P</TextBlock>
             <TextBlock TextWrapping="WrapWithOverflow">
-                The section below will test the performance of using a DirectoryEntry, LINQ to LDAP, LINQ to LDAP with auto-mapping, and raw S.DS.P.
+                The section below will test the performance of using a DirectoryEntry, LINQ to LDAP, and raw S.DS.P.
                 See the DirectoryEntryCompareWork method in /ViewModels/PerformanceViewModel.cs for code.
             </TextBlock>
         </StackPanel>

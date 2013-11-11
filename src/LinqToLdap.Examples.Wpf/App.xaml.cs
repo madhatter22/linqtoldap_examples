@@ -10,6 +10,7 @@ using LinqToLdap.Examples.Wpf.Helpers;
 using LinqToLdap.Examples.Wpf.Messages;
 using LinqToLdap.Examples.Wpf.ViewModels;
 using LinqToLdap.Examples.Wpf.Views;
+using LinqToLdap.Logging;
 using LinqToLdap.Mapping;
 using SimpleInjector;
 using DialogMessage = LinqToLdap.Examples.Wpf.Messages.DialogMessage;
@@ -38,7 +39,7 @@ namespace LinqToLdap.Examples.Wpf
         private void CreateContainer(object sender, StartupEventArgs e)
         {
             var container = new Container();
-            container.RegisterSingle(() => new CustomTextLogger(Console.Out));
+            container.RegisterSingle<ILinqToLdapLogger>(() => new SimpleTextLogger(Console.Out));
 
             container.RegisterSingle(() => Messenger.Default);
 
@@ -46,7 +47,7 @@ namespace LinqToLdap.Examples.Wpf
             {
                 var config = new LdapConfiguration()
                     .MaxPageSizeIs(500)
-                    .LogTo(container.GetInstance<CustomTextLogger>());
+                    .LogTo(container.GetInstance<ILinqToLdapLogger>());
 
                 // Note the optional parameters on AddMapping.
                 // We can perform "late" mapping on certain values, 
@@ -74,6 +75,7 @@ namespace LinqToLdap.Examples.Wpf
             });
 
             container.Register<Func<IDirectoryContext>>(() => container.GetInstance<ILdapConfiguration>().CreateContext);
+            container.Register(() => container.GetInstance<Func<IDirectoryContext>>().Invoke());
 
             Container = container;
 
@@ -90,7 +92,8 @@ namespace LinqToLdap.Examples.Wpf
             using (var writer = new StringWriter(sb))
             {
                 ObjectDumper.Write(message.Error, 0, writer);
-                Xceed.Wpf.Toolkit.MessageBox.Show(sb.ToString(), "LINQ to LDAP WPF Examples Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show(sb.ToString(), "LINQ to LDAP WPF Examples Error", MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 
@@ -102,7 +105,7 @@ namespace LinqToLdap.Examples.Wpf
                                                ? MessageBoxImage.Warning
                                                : MessageBoxImage.Information);
 
-            Xceed.Wpf.Toolkit.MessageBox.Show(message.Message, message.Header, MessageBoxButton.OK, image);
+            MessageBox.Show(message.Message, message.Header, MessageBoxButton.OK, image);
         }
     }
 }

@@ -20,17 +20,17 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     public class UsersViewModel : ViewModel
     {
         private IMessenger _messenger;
-        private Func<IDirectoryContext> _contextFactory; 
+        private IDirectoryContext _context; 
         private bool _isBusy;
 
-        public UsersViewModel() : this(Get<IMessenger>(), Get<Func<IDirectoryContext>>())
+        public UsersViewModel() : this(Get<IMessenger>(), Get<IDirectoryContext>())
         {
         }
 
-        public UsersViewModel(IMessenger messenger, Func<IDirectoryContext> contextFactory)
+        public UsersViewModel(IMessenger messenger, IDirectoryContext context)
         {
             _messenger = messenger;
-            _contextFactory = contextFactory;
+            _context = context;
 
             Users = new ObservableCollection<UserListViewModel>();
 
@@ -87,50 +87,45 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private Task<List<UserListViewModel>> LoadUsersAsync()
         {
-            return Task.Factory
-                .StartNew(
+            return Task.Run(
                     () =>
                         {
-                            using (var context = _contextFactory())
+                            var query = _context.Query<User>();
+                            if (!string.IsNullOrWhiteSpace(SearchText))
                             {
-                                var query = context.Query<User>();
-                                if (!string.IsNullOrWhiteSpace(SearchText))
+                                if (CustomFilter)
                                 {
-                                    if (CustomFilter)
-                                    {
-                                        //by default filters passed to the Where clause are not cleaned.
-                                        //if your users don't understand valid filters I would go with fixed search options.
-                                        query = query.Where(SearchText);
-                                    }
-                                    else
-                                    {
-                                        var split = SearchText.Split(new[] {" "}, StringSplitOptions.RemoveEmptyEntries);
-
-                                        var expression = PredicateBuilder.Create<User>();
-                                        expression = split.Length == 2
-                                                         ? expression.And(
-                                                             s =>
-                                                             s.FirstName.StartsWith(split[0]) &&
-                                                             s.LastName.StartsWith(split[1]))
-                                                         : split.Aggregate(expression,
-                                                                           (current, t) =>
-                                                                           current.Or(
-                                                                               s =>
-                                                                               s.UserId == t ||
-                                                                               s.FirstName.StartsWith(t) ||
-                                                                               s.LastName.StartsWith(t)));
-
-                                        query = query.Where(expression);
-                                    }
+                                    //by default filters passed to the Where clause are not cleaned.
+                                    //you can attempte to clean them yourselves using the CleanFilterValue method, but it has its limits.
+                                    //if your users don't understand valid filters I would go with fixed search options.
+                                    query = query.Where(SearchText);
                                 }
+                                else
+                                {
+                                    var split = SearchText.Split(new[] { " " }, StringSplitOptions.RemoveEmptyEntries);
 
-                                return
-                                    query.Select(
-                                        s =>
-                                        new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName,
-                                                              LoadUser))
-                                         .ToList();
+                                    var expression = PredicateBuilder.Create<User>();
+                                    expression = split.Length == 2
+                                                     ? expression.And(
+                                                         s =>
+                                                         s.FirstName.StartsWith(split[0]) &&
+                                                         s.LastName.StartsWith(split[1]))
+                                                     : split.Aggregate(expression,
+                                                                       (current, t) =>
+                                                                       current.Or(
+                                                                           s =>
+                                                                           s.UserId == t ||
+                                                                           s.FirstName.StartsWith(t) ||
+                                                                           s.LastName.StartsWith(t)));
+
+                                    query = query.Where(expression);
+                                }
                             }
+
+                            return query.Select(
+                                s => new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName,
+                                    LoadUser))
+                                .ToList();
                         });
         }
 
@@ -140,7 +135,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             _isBusy = false;
             if (task.Exception != null)
             {
-                _messenger.Send(task.Exception);
+                _messenger.Send(new ErrorMessage(task.Exception));
                 return;
             }
 
@@ -161,12 +156,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         public Task<User> LoadUserAsync(string id)
         {
-            return Task.Factory
-                .StartNew(() =>
-                              {
-                                  using (var context = _contextFactory())
-                                      return context.Query<User>().FirstOrDefault(u => u.UserId == id);
-                              });
+            return Task.Run(() => _context.Query<User>().FirstOrDefault(u => u.UserId == id));
         }
 
         public void LoadUserComplete(Task<User> task, string id)
@@ -200,7 +190,8 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         public override void Cleanup()
         {
             _messenger = null;
-            _contextFactory = null;
+            _context.Dispose();
+            _context = null;
             if (CurrentContent != null && CurrentContent != this) CurrentContent.Cleanup();
 
             base.Cleanup();

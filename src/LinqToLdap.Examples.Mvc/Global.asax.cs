@@ -41,20 +41,13 @@ namespace LinqToLdap.Examples.Mvc
 
             var container = new Container();
 
-            container.RegisterSingle(() =>
-                                         {
-                                             var logger = new SimpleTextLogger(TraceWriter.Instance)
-                                                              {
-                                                                  TraceEnabled = false
-                                                              };
-                                             return logger;
-                                         });
+            container.RegisterSingle<ILinqToLdapLogger>(() => new SimpleTextLogger());
 
             container.RegisterSingle<ILdapConfiguration>(() =>
             {
                 var config = new LdapConfiguration()
                     .MaxPageSizeIs(500)
-                    .LogTo(container.GetInstance<SimpleTextLogger>());
+                    .LogTo(container.GetInstance<ILinqToLdapLogger>());
 
                 //Note the optional parameters available on AddMapping.
                 //We can perform "late" mapping on certain values, 

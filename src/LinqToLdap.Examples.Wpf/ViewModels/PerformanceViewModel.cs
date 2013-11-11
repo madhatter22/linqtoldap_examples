@@ -70,7 +70,8 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                                 var match = new
                                                 {
                                                     Ou = result.Properties["ou"][0].ToString(),
-                                                    ObjectClass = result.Properties["objectclass"][0].ToString()
+                                                    ObjectClass = result.Properties["objectclass"][0].ToString(),
+                                                    DistinguishedName = result.Path
                                                 };
                             }
                         }
@@ -92,7 +93,12 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
                             var match = connection.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Base)
                                           .Where(_ => Filter.EqualAnything(_, "objectclass"))
-                                          .Select(da => new { Ou = da.GetString("ou"), ObjectClass = da.GetString("objectclass") })
+                                          .Select(da => new
+                                          {
+                                              Ou = da.GetString("ou"), 
+                                              ObjectClass = da.GetString("objectclass"), 
+                                              da.DistinguishedName
+                                          })
                                           .FirstOrDefault();
                         }
                         watch.Stop();
@@ -113,10 +119,9 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
                             using (var context = new DirectoryContext(connection))
                             {
-                                var example = new { Ou = "", ObjectClass = "" };
+                                var example = new { Ou = "", ObjectClass = "", DistinguishedName = "" };
                                 var match = context.Query(example, System.DirectoryServices.Protocols.SearchScope.Base, NamingContext)
-                                           .Where(e => e.ObjectClass != null)
-                                           .FirstOrDefault();
+                                    .FirstOrDefault(e => e.ObjectClass != null);
                             }
                         }
                         watch.Stop();
@@ -137,8 +142,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                         using (var context = new DirectoryContext(connection))
                         {
                             var match = context.Query<SimpleClass>(System.DirectoryServices.Protocols.SearchScope.Base, NamingContext)
-                                      .Where(e => e.ObjectClass != null)
-                                      .FirstOrDefault();
+                                .FirstOrDefault(e => e.ObjectClass != null);
                         }
                     }
                     watch.Stop();
@@ -169,7 +173,8 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                             var match = new
                                             {
                                                 Ou = (string) entry.Attributes["ou"].GetValues(typeof (string))[0],
-                                                ObjectClass = (string) entry.Attributes["objectclass"].GetValues(typeof (string))[0]
+                                                ObjectClass = (string) entry.Attributes["objectclass"].GetValues(typeof (string))[0], 
+                                                entry.DistinguishedName
                                             };
                         }
                         watch.Stop();
@@ -378,6 +383,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private class SimpleClass
         {
+            public string DistinguishedName { get; set; }
             public string Ou { get; set; }
             public string ObjectClass { get; set; }
         }

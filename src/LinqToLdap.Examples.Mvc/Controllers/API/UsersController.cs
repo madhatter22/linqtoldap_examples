@@ -39,7 +39,9 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
                 }
             }
 
-            var results = query.Select(s => new { s.DistinguishedName, Name = string.Format("{0} {1}", s.FirstName, s.LastName), s.UserId }).ToArray();
+            var results = query
+                .Select(s => new { s.DistinguishedName, Name = string.Format("{0} {1}", s.FirstName, s.LastName), s.UserId })
+                .ToArray();
 
             return results;
         }

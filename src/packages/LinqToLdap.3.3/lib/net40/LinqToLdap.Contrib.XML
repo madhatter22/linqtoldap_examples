@@ -1,0 +1,580 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LinqToLdap.Contrib</name>
+    </assembly>
+    <members>
+        <member name="T:LinqToLdap.DirectoryContextAsyncExtensions">
+            <summary>
+            Async extension methods for <see cref="T:LinqToLdap.IDirectoryContext"/>.
+            </summary>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.GetByDNAsync``1(LinqToLdap.IDirectoryContext,System.String)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.GetByDN``1(System.String)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="distinguishedName">The distinguished name to look for.</param>
+            <typeparam name="T">The type of mapped object</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.GetByDNAsync(LinqToLdap.IDirectoryContext,System.String,System.String[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.GetByDN(System.String,System.String[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="distinguishedName">The distinguished name to look for.</param>
+            <param name="attributes">The attributes to load.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAsync``1(LinqToLdap.IDirectoryContext,``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Add``1(``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/>
+            </summary>
+            <typeparam name="T">The type of entry.</typeparam>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The object to save.</param>
+            <param name="distinguishedName">The distinguished name for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Add(LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Add(LinqToLdap.Collections.IDirectoryAttributes)"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.DirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Add(LinqToLdap.Collections.DirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.DirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Add(LinqToLdap.Collections.DirectoryAttributes)"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAndGetAsync``1(LinqToLdap.IDirectoryContext,``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.AddAndGet``1(``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/>
+            </summary>
+            <typeparam name="T">The type of entry.</typeparam>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The object to save.</param>
+            <param name="distinguishedName">The distinguished name for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.AddAndGet(LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.AddAndGet(LinqToLdap.Collections.IDirectoryAttributes)"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.DirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.AddAndGet(LinqToLdap.Collections.DirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])"/>
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.DirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.AddAndGet(LinqToLdap.Collections.DirectoryAttributes)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The <see cref="T:LinqToLdap.DirectoryContext"/>.</param>
+            <param name="entry">The attributes for the entry</param>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.Delete(LinqToLdap.IDirectoryContext,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Delete(System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>. 
+            </summary>
+            <param name="context">The context.</param>
+            <param name="distinguishedName">The distinguished name of the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="distinguishedName"/> is null, empty or white space.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAndGetAsync``1(LinqToLdap.IDirectoryContext,``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.UpdateAndGet``1(``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The entry to update</param>
+            <param name="distinguishedName">The distinguished name for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <typeparam name="T">The type of entry.</typeparam>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if entry is null</exception>
+            <exception cref="T:LinqToLdap.Exceptions.MappingException">
+            Thrown if <paramref name="distinguishedName"/> is null and Distinguished Name is not mapped.  
+            Thrown if <typeparamref name="T"/> has not been mapped.
+            </exception>
+            <exception cref="T:System.ArgumentException">Thrown if distinguished name is null and there is no mapped distinguished name property.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation is not successful</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation is not successful</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.UpdateAndGet(LinqToLdap.Collections.IDirectoryAttributes)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The attributes for the entry.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.DirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.UpdateAndGet(LinqToLdap.Collections.DirectoryAttributes)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The attributes for the entry.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAndGetAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.UpdateAndGet(LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The attributes for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAsync``1(LinqToLdap.IDirectoryContext,``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Update``1(``0,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The entry to update</param>
+            <param name="distinguishedName">The distinguished name for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <typeparam name="T">The type of entry.</typeparam>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if entry is null</exception>
+            <exception cref="T:LinqToLdap.Exceptions.MappingException">
+            Thrown if <paramref name="distinguishedName"/> is null and Distinguished Name is not mapped.  
+            Thrown if <typeparamref name="T"/> has not been mapped.
+            </exception>
+            <exception cref="T:System.ArgumentException">Thrown if distinguished name is null and there is no mapped distinguished name property.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation is not successful</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation is not successful</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Update(LinqToLdap.Collections.IDirectoryAttributes)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The attributes for the entry.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.DirectoryAttributes)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Update(LinqToLdap.Collections.DirectoryAttributes)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The attributes for the entry.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.UpdateAsync(LinqToLdap.IDirectoryContext,LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Update(LinqToLdap.Collections.IDirectoryAttributes,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="entry">The attributes for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.DeleteAsync(LinqToLdap.IDirectoryContext,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.Delete(System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="distinguishedName">The distinguished name of the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="distinguishedName"/> is null, empty or white space.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.ListServerAttributesAsync(LinqToLdap.IDirectoryContext,System.String[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.ListServerAttributes(System.String[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.AddAttributeAsync(LinqToLdap.IDirectoryContext,System.String,System.String,System.Object,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.AddAttribute(System.String,System.String,System.Object,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="distinguishedName">The entry</param>
+            <param name="attributeName">The name of the attribute</param>
+            <param name="value">The value for the entry.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapConnection">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.DeleteAttributeAsync(LinqToLdap.IDirectoryContext,System.String,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.DeleteAttribute(System.String,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="distinguishedName">The entry</param>
+            <param name="attributeName">The name of the attribute</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="distinguishedName"/> or <paramref name="attributeName"/> is null, empty or white space.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapConnection">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.MoveEntryAsync(LinqToLdap.IDirectoryContext,System.String,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.MoveEntry(System.String,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="currentDistinguishedName">The entry's current distinguished name</param>
+            <param name="newNamingContext">The new container for the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="currentDistinguishedName"/> has an invalid format.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="currentDistinguishedName"/>
+            or <paramref name="newNamingContext"/> are null, empty or white space.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapConnection">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.RenameEntryAsync(LinqToLdap.IDirectoryContext,System.String,System.String,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.RenameEntry(System.String,System.String,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="context">The context.</param>
+            <param name="currentDistinguishedName">The entry's current distinguished name</param>
+            <param name="newName">The new name of the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="currentDistinguishedName"/> has an invalid format.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="currentDistinguishedName"/>
+            or <paramref name="newName"/> are null, empty or white space.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapConnection">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.DirectoryContextAsyncExtensions.RetrieveRangesAsync``1(LinqToLdap.IDirectoryContext,System.String,System.String,System.Int32)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.DirectoryContext.RetrieveRanges``1(System.String,System.String,System.Int32)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TValue">The type of the attribute.  Must be <see cref="T:System.String"/> or <see cref="T:System.Array"/> of <see cref="T:System.Byte"/>.</typeparam>
+            <param name="context">The context.</param>
+            <param name="distinguishedName">The distinguished name of the entry.</param>
+            <param name="attributeName">The attribute to load.</param>
+            <param name="start">The starting point for the range. Defaults to 0.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="distinguishedName"/> or <paramref name="attributeName"/> is null, empty or white space.
+            </exception>
+            <returns></returns>
+        </member>
+        <member name="T:LinqToLdap.LdapConnectionAsyncExtensions">
+            <summary>
+            Async extension methods for <see cref="T:System.DirectoryServices.Protocols.LdapConnection"/>.
+            </summary>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.AddAsync(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IPreAddEventListener})">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.Add(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IAddEventListener})"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="entry">The entry to add.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <param name="listeners">The event listeners to be notified.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="connection"/> or <paramref name="entry"/>&gt; is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the add was not successful.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.AddAndGetAsync(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IPreAddEventListener})">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.AddAndGet(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IAddEventListener})"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="entry">The entry to add.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <param name="listeners">The event listeners to be notified.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="connection"/> or <paramref name="entry"/>&gt; is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the add was not successful.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.DeleteAsync(System.DirectoryServices.Protocols.LdapConnection,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IPreDeleteEventListener})">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.Delete(System.DirectoryServices.Protocols.LdapConnection,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IDeleteEventListener})"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="distinguishedName">The distinguished name of the entry
+            </param><param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="listeners">The event listeners to be notified.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="distinguishedName"/> is null, empty or white space.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.UpdateAsync(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IPreUpdateEventListener})">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.Update(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IUpdateEventListener})"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="entry">The entry to update.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <param name="listeners">The event listeners to be notified.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.UpdateAndGetAsync(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IPreUpdateEventListener})">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.UpdateAndGet(System.DirectoryServices.Protocols.LdapConnection,LinqToLdap.Collections.IDirectoryAttributes,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[],System.Collections.Generic.IEnumerable{LinqToLdap.EventListeners.IUpdateEventListener})"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="entry">The entry to update.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <param name="listeners">The event listeners to be notified.</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="entry"/> is null.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapException">Thrown if the operation fails</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.ListServerAttributesAsync(System.DirectoryServices.Protocols.LdapConnection,System.String[],LinqToLdap.Logging.ILinqToLdapLogger)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.ListServerAttributes(System.DirectoryServices.Protocols.LdapConnection,System.String[],LinqToLdap.Logging.ILinqToLdapLogger)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="attributes">
+            Specify specific attributes to load.  Some LDAP servers require an explicit request for certain attributes.
+            </param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.GetByDNAsync(System.DirectoryServices.Protocols.LdapConnection,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.String[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.GetByDN(System.DirectoryServices.Protocols.LdapConnection,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.String[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="distinguishedName">The distinguished name to look for.</param>
+            <param name="attributes">The attributes to load.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.MoveEntryAsync(System.DirectoryServices.Protocols.LdapConnection,System.String,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.MoveEntry(System.DirectoryServices.Protocols.LdapConnection,System.String,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="currentDistinguishedName">The entry's current distinguished name</param>
+            <param name="newNamingContext">The new container for the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="currentDistinguishedName"/> has an invalid format.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="currentDistinguishedName"/>
+            or <paramref name="newNamingContext"/> are null, empty or white space.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapConnection">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.RenameEntryAsync(System.DirectoryServices.Protocols.LdapConnection,System.String,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.RenameEntry(System.DirectoryServices.Protocols.LdapConnection,System.String,System.String,LinqToLdap.Logging.ILinqToLdapLogger,System.DirectoryServices.Protocols.DirectoryControl[])"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="connection">The connection to the directory.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="currentDistinguishedName">The entry's current distinguished name</param>
+            <param name="newName">The new name of the entry</param>
+            <param name="controls">Any <see cref="T:System.DirectoryServices.Protocols.DirectoryControl"/>s to be sent with the request</param>
+            <exception cref="T:System.ArgumentException">
+            Thrown if <paramref name="currentDistinguishedName"/> has an invalid format.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">Thrown if <paramref name="currentDistinguishedName"/>
+            or <paramref name="newName"/> are null, empty or white space.
+            </exception>
+            <exception cref="T:System.DirectoryServices.Protocols.DirectoryOperationException">Thrown if the operation fails.</exception>
+            <exception cref="T:System.DirectoryServices.Protocols.LdapConnection">Thrown if the operation fails.</exception>
+        </member>
+        <member name="M:LinqToLdap.LdapConnectionAsyncExtensions.RetrieveRangesAsync``1(System.DirectoryServices.Protocols.LdapConnection,System.String,System.String,System.Int32,LinqToLdap.Logging.ILinqToLdapLogger)">
+            <summary>
+            Executes <see cref="M:LinqToLdap.LdapConnectionExtensions.RetrieveRanges``1(System.DirectoryServices.Protocols.LdapConnection,System.String,System.String,System.Int32,LinqToLdap.Logging.ILinqToLdapLogger)"/> within a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TValue">The type of the attribute.  Must be <see cref="T:System.String"/> or <see cref="T:System.Array"/> of <see cref="T:System.Byte"/>.</typeparam>
+            <param name="connection">The connection to the directory.</param>
+            <param name="log">The log for query information. Defaults to null.</param>
+            <param name="distinguishedName">The distinguished name of the entry.</param>
+            <param name="attributeName">The attribute to load.</param>
+            <param name="start">The starting point for the range. Defaults to 0.</param>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="distinguishedName"/> or <paramref name="attributeName"/> is null, empty or white space.
+            </exception>
+            <returns></returns>
+        </member>
+        <member name="T:LinqToLdap.QueryableAsyncExtensions">
+            <summary>
+            Async extension methids for <see cref="T:LinqToLdap.IDirectoryContext"/>.
+            </summary>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.FirstOrDefaultAsync``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes FirstOrDefault on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="source">The query.</param>
+            <typeparam name="TSource">The element type to return.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.FirstOrDefaultAsync``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Executes FirstOrDefault on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="source">The query</param>
+            <param name="predicate">A function to test each element for a condition.</param>
+            <typeparam name="TSource">The element type to return.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.FirstAsync``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes First on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.FirstAsync``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Executes First on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <param name="predicate">The condition by which to filter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.SingleAsync``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes Single on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.SingleAsync``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Executes Single on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <param name="predicate">The condition by which to filter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.SingleOrDefaultAsync``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes SingleOrDefault on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <param name="source">The query</param>
+            <typeparam name="TSource"></typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.SingleOrDefaultAsync``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Executes SingleOrDefault on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <param name="predicate">The condition by which to filter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.ToListAsync``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes <see cref="M:LinqToLdap.QueryableExtensions.ToList``1(System.Linq.IQueryable{``0})"/> on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.ListAttributesAsync``1(System.Linq.IQueryable{``0},System.String[])">
+            <summary>
+            Executes <see cref="M:LinqToLdap.QueryableExtensions.ListAttributes``1(System.Linq.IQueryable{``0},System.String[])"/> on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <param name="attributes">The attributes to load.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.CountAsync``1(System.Linq.IQueryable{``0})">
+            <summary>
+            Executes Count on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.QueryableAsyncExtensions.CountAsync``1(System.Linq.IQueryable{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Executes Count on <paramref name="source"/> in a <see cref="T:System.Threading.Tasks.Task"/>.
+            </summary>
+            <typeparam name="TSource">The type of the elements of <paramref name="source"/>.</typeparam>
+            <param name="source">The query.</param>
+            /// <param name="predicate">The condition by which to filter.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

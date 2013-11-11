@@ -30,11 +30,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="LinqToLdap">
-      <HintPath>..\packages\LinqToLdap.3.2\lib\net40\LinqToLdap.dll</HintPath>
+    <Reference Include="LinqToLdap, Version=3.3.0.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\LinqToLdap.3.3\lib\net40\LinqToLdap.dll</HintPath>
     </Reference>
-    <Reference Include="LinqToLdap.Contrib">
-      <HintPath>..\packages\LinqToLdap.3.2\lib\net40\LinqToLdap.Contrib.dll</HintPath>
+    <Reference Include="LinqToLdap.Contrib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\LinqToLdap.3.3\lib\net40\LinqToLdap.Contrib.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
