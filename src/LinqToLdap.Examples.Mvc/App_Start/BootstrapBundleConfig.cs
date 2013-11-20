@@ -7,13 +7,14 @@ namespace LinqToLdap.Examples.Mvc.App_Start
 		public static void RegisterBundles()
 		{
             BundleTable.Bundles.Add(new StyleBundle("~/Content/site").Include("~/Content/site.css"));
-			BundleTable.Bundles.Add(new StyleBundle("~/Content/bootstrap/base").Include("~/Content/bootstrap/bootstrap.css"));
-            BundleTable.Bundles.Add(new StyleBundle("~/Content/bootstrap/responsive").Include("~/Content/bootstrap/bootstrap-responsive.css"));
-            BundleTable.Bundles.Add(new StyleBundle("~/Content/alertify/core").Include("~/Content/alertify/alertify.core.css"));
-            BundleTable.Bundles.Add(new StyleBundle("~/Content/alertify/theme").Include("~/Content/alertify/alertify.default.css"));
+			BundleTable.Bundles.Add(new StyleBundle("~/Content/bootstrap").Include("~/Content/bootstrap/bootstrap.css",
+                "~/Content/bootstrap/bootstrap-responsive.css"));
+		    BundleTable.Bundles.Add(new StyleBundle("~/Content/alertify").Include("~/Content/alertify/alertify.core.css",
+		        "~/Content/alertify/alertify.default.css"));
 
             BundleTable.Bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include("~/Scripts/bootstrap.js"));
-            BundleTable.Bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js"));
+            BundleTable.Bundles.Add(new ScriptBundle("~/bundles/jquery").Include("~/Scripts/jquery-{version}.js", 
+                "~/Scripts/jquery.blockUI.js"));
             BundleTable.Bundles.Add(new ScriptBundle("~/bundles/knockout").Include("~/Scripts/knockout-{version}.js"));
             BundleTable.Bundles.Add(new ScriptBundle("~/bundles/alertify").Include("~/Scripts/alertify/alertify.js"));
 

@@ -33,7 +33,7 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             //null or empty naming contexts are not supported using the normal Query method, however.
         }
 
-        private static object SelectProjection(KeyValuePair<string, object> kvp)
+        public static object SelectProjection(KeyValuePair<string, object> kvp)
         {
             if (kvp.Value is string)
             {

@@ -43,26 +43,30 @@
     };
 
     self.loadItem = function (id) {
-        alertify.log("Loading...", 'log', 1000);
+        $.blockUI();
         $.getJSON('/api/users/get', { id: id })
             .success(function (data) {
+                $.unblockUI();
                 self.item.setValues(data);
                 self.mode('item');
             })
             .fail(function (jqxhr, textStatus, error) {
+                $.unblockUI();
                 alertify.error(textStatus + ': ' + error);
             });
     };
     
     self.search = function () {
         self.isSearching(true);
-        alertify.log("Loading...", 'log', 1000);
+        $.blockUI();
         $.getJSON('/api/users/get', { q: self.query(), custom: self.isCustomFilter() })
             .success(function (data) {
+                $.unblockUI();
                 self.isSearching(false);
                 self.items($.map(data, function(value) { return new ListItemViewModel(value); }));
             })
             .fail(function (jqxhr, textStatus, error) {
+                $.unblockUI();
                 self.isSearching(false);
                 alertify.error(textStatus + ': ' + error);
             });

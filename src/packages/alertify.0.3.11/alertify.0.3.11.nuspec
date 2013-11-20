@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>alertify</id>
+    <version>0.3.11</version>
+    <title>Alertify.js</title>
+    <authors>Fabien Doiron</authors>
+    <owners>Fabien Doiron</owners>
+    <licenseUrl>http://www.opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>http://fabien-d.github.io/alertify.js/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Alertify is an unobtrusive customizable JavaScript notification system.</description>
+    <releaseNotes>https://github.com/fabien-d/alertify.js/wiki/Changeset</releaseNotes>
+    <copyright>Copyright (c) 2012, Fabien Doiron</copyright>
+    <tags>alerts javascript alertify dialogs dialog</tags>
+  </metadata>
+</package>

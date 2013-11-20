@@ -9,12 +9,14 @@
         };
     };
 
-    alertify.log("Loading...", 'log', 1000);
+    $.blockUI();
     $.getJSON('/api/serverinfo')
-        .success(function(data) {
+        .success(function (data) {
+            $.unblockUI();
             self.serverSettings($.map(data, function(item) { return new ListItemViewModel(item); }));
         })
-        .fail(function(jqxhr, textStatus, error) {
+        .fail(function (jqxhr, textStatus, error) {
+            $.unblockUI();
             alertify.error(textStatus + ': ' + error);
         });
     
