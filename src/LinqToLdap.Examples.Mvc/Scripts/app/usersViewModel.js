@@ -63,7 +63,12 @@
             .success(function (data) {
                 $.unblockUI();
                 self.isSearching(false);
-                self.items($.map(data, function(value) { return new ListItemViewModel(value); }));
+                if (data.message) {
+                    self.items([]);
+                    alertify.error(data.message);
+                } else {
+                    self.items($.map(data, function (value) { return new ListItemViewModel(value); }));
+                }
             })
             .fail(function (jqxhr, textStatus, error) {
                 $.unblockUI();
