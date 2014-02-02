@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>SharpTestsEx.MVC</id>
+    <version>1.1.1</version>
+    <title>SharpTestsEx.MVC</title>
+    <authors>Fabio Maulo,  jdiamond</authors>
+    <owners>Fabio Maulo,  jdiamond</owners>
+    <licenseUrl>http://sharptestex.codeplex.com/license</licenseUrl>
+    <projectUrl>http://sharptestex.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Project/Download/FileDownload.aspx?ProjectName=sharptestex&amp;DownloadId=78322&amp;Build=17601</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>SharpTestsEx extension for MVC.</description>
+    <summary>SharpTestsEx extension for MVC.</summary>
+    <releaseNotes />
+    <copyright />
+    <language />
+    <dependencies>
+      <dependency id="SharpTestsEx" version="1.1.1" />
+    </dependencies>
+  </metadata>
+</package>

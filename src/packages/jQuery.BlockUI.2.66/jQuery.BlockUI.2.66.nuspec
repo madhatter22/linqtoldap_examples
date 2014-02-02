@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>jQuery.BlockUI</id>
+    <version>2.66</version>
+    <authors>M. Alsup</authors>
+    <owners>M. Alsup</owners>
+    <projectUrl>http://malsup.com/jquery/block/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>The jQuery BlockUI Plugin lets you simulate synchronous behavior when using AJAX, without locking the browser.</description>
+    <summary>The jQuery BlockUI Plugin lets you simulate synchronous behavior when using AJAX, without locking the browser.
+         When activated, it will prevent user activity with the page (or part of the page) until it is deactivated.
+         BlockUI adds elements to the DOM to give it both the appearance and behavior of blocking user interaction.</summary>
+    <releaseNotes>- Pass event object to onOverlayClick()</releaseNotes>
+    <copyright>Copyright (c) 2007-2013 M. Alsup</copyright>
+    <tags>jQuery.BlockUI BlockUI Block UI</tags>
+    <dependencies>
+      <dependency id="jQuery" version="1.7" />
+    </dependencies>
+  </metadata>
+</package>
