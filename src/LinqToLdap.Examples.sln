@@ -1,15 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.30110.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqToLdap.Examples.Models", "LinqToLdap.Examples.Models\LinqToLdap.Examples.Models.csproj", "{6D4F0931-F0EC-4307-8A10-84AF6AF39B86}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqToLdap.Examples.Wpf", "LinqToLdap.Examples.Wpf\LinqToLdap.Examples.Wpf.csproj", "{B5339844-AE58-4D76-87E6-E43C05689E67}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqToLdap.Examples.Mvc", "LinqToLdap.Examples.Mvc\LinqToLdap.Examples.Mvc.csproj", "{A2E040CF-3712-4807-B19E-DEAA6FB8D14F}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqToLdap.Examples.Wpf.Tests", "LinqToLdap.Examples.Wpf.Tests\LinqToLdap.Examples.Wpf.Tests.csproj", "{C34F273F-AB09-42ED-B36B-16E8B066B967}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinqToLdap.Examples.Mvc.Tests", "LinqToLdap.Examples.Mvc.Tests\LinqToLdap.Examples.Mvc.Tests.csproj", "{4A79C9C3-68DD-4D34-800E-ED19549E056B}"
 EndProject
@@ -31,10 +29,6 @@ Global
 		{A2E040CF-3712-4807-B19E-DEAA6FB8D14F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A2E040CF-3712-4807-B19E-DEAA6FB8D14F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A2E040CF-3712-4807-B19E-DEAA6FB8D14F}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C34F273F-AB09-42ED-B36B-16E8B066B967}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C34F273F-AB09-42ED-B36B-16E8B066B967}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C34F273F-AB09-42ED-B36B-16E8B066B967}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C34F273F-AB09-42ED-B36B-16E8B066B967}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4A79C9C3-68DD-4D34-800E-ED19549E056B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4A79C9C3-68DD-4D34-800E-ED19549E056B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A79C9C3-68DD-4D34-800E-ED19549E056B}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Net;
 using System.Web.Http;
 using LinqToLdap.Examples.Models;
+using LinqToLdap.Examples.Mvc.Models;
 
 namespace LinqToLdap.Examples.Mvc.Controllers.API
 {
@@ -24,7 +25,7 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
                 {
                     //by default filters passed to the Where method are not cleaned.
                     //if your users don't understand valid filters I would go with fixed search options.
-                    query = query.Where(q);
+                    query = query.FilterWith(q);
                 }
                 else
                 {
@@ -40,7 +41,13 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             }
 
             var results = query
-                .Select(s => new { s.DistinguishedName, Name = string.Format("{0} {1}", s.FirstName, s.LastName), s.UserId })
+                .Select(s =>
+                        new UserListItem
+                        {
+                            DistinguishedName = s.DistinguishedName,
+                            Name = string.Format("{0} {1}", s.FirstName, s.LastName),
+                            UserId = s.UserId
+                        })
                 .ToArray();
 
             return results;
