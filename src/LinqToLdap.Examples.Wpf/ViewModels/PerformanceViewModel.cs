@@ -17,11 +17,10 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     {
         private const string Server = "ldap.utexas.edu";
         private const string NamingContext = "ou=people,dc=directory,dc=utexas,dc=edu";
-        private const int LoopCount = 5;
+        private const int LoopCount = 20;
 
         private int _directoryEntryRunCount;
         private int _factoryRunCount;
-        private long _directoryEntryRunTime;
         private long _dynamicRunTime;
         private long _anonymousRunTime;
         private long _classRunTime;
@@ -53,201 +52,198 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
 
         private void DirectoryEntryCompareWork()
         {
-            _messenger.Send(new ToggleBusyMessage());
+            //test is pointless without DirectoryEntry comparison
 
-            var dirEntryThread = new Thread(() =>
-                {
-                    for (int i = 0; i < LoopCount; i++)
-                    {
-                        var watch = Stopwatch.StartNew();
-                        using (var entry = new DirectoryEntry(string.Format("LDAP://{0}/{1}", Server, NamingContext)))
-                        {
-                            entry.AuthenticationType = AuthenticationTypes.Anonymous;
-                            using (var s = new DirectorySearcher(entry, "(objectclass=*)", new[]{"ou", "objectclass"}))
-                            {
-                                s.SearchScope = SearchScope.Base;
-                                var result = s.FindOne();
-                                var match = new
-                                                {
-                                                    Ou = result.Properties["ou"][0].ToString(),
-                                                    ObjectClass = result.Properties["objectclass"][0].ToString(),
-                                                    DistinguishedName = result.Path
-                                                };
-                            }
-                        }
+            //_messenger.Send(new ToggleBusyMessage());
 
-                        watch.Stop();
-                        _directoryEntryRunTime += watch.ElapsedMilliseconds;
-                    }
-                });
+            ////paging doesn't work againast open ldap using S.DS
+            ////var dirEntryThread = new Thread(() =>
+            ////    {
+            ////        for (int i = 0; i < LoopCount; i++)
+            ////        {
+            ////            var watch = Stopwatch.StartNew();
+            ////            using (var entry = new DirectoryEntry(string.Format("LDAP://{0}/{1}", Server, NamingContext)))
+            ////            {
+            ////                entry.AuthenticationType = AuthenticationTypes.Anonymous;
+            ////                using (var s = new DirectorySearcher(entry, "!(uid=*)", new[]{"ou", "objectclass"}))
+            ////                {
+            ////                    s.SearchScope = SearchScope.Subtree;
+            ////                    s.PageSize = 10;
+            ////                    s.SizeLimit = 10;
+            ////                    var result = s.FindOne();
+            ////                    var match = new
+            ////                                    {
+            ////                                        Ou = result.Properties["ou"][0].ToString(),
+            ////                                        ObjectClass = result.Properties["objectclass"][0].ToString(),
+            ////                                        DistinguishedName = result.Path
+            ////                                    };
+            ////                }
+            ////            }
 
-            var dynamicMappingThread = new Thread(() =>
-                {
-                    for (int i = 0; i < LoopCount; i++)
-                    {
-                        var watch = Stopwatch.StartNew();
-                        using (var connection = new LdapConnection(Server))
-                        {
-                            connection.SessionOptions.ProtocolVersion = 3;
-                            connection.AuthType = AuthType.Anonymous;
+            ////            watch.Stop();
+            ////            _directoryEntryRunTime += watch.ElapsedMilliseconds;
+            ////        }
+            ////    });
 
-                            var match = connection.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Base)
-                                          .Where(_ => Filter.EqualAnything(_, "objectclass"))
-                                          .Select(da => new
-                                          {
-                                              Ou = da.GetString("ou"), 
-                                              ObjectClass = da.GetString("objectclass"), 
-                                              da.DistinguishedName
-                                          })
-                                          .FirstOrDefault();
-                        }
-                        watch.Stop();
+            //var dynamicMappingThread = new Thread(() =>
+            //    {
+            //        for (int i = 0; i < LoopCount; i++)
+            //        {
+            //            var watch = Stopwatch.StartNew();
+            //            using (var connection = new LdapConnection(Server))
+            //            {
+            //                connection.SessionOptions.ProtocolVersion = 3;
+            //                connection.AuthType = AuthType.Anonymous;
 
-                        _dynamicRunTime += watch.ElapsedMilliseconds;
-                    }
-                });
+            //                var match = connection.Query(NamingContext, System.DirectoryServices.Protocols.SearchScope.Subtree)
+            //                              .Where(_ => !Filter.EqualAnything(_, "uid"))
+            //                              .Select(da => new
+            //                              {
+            //                                  Ou = da.GetString("ou"), 
+            //                                  ObjectClass = da.GetString("objectclass"), 
+            //                                  da.DistinguishedName
+            //                              })
+            //                              .FirstOrDefault();
+            //            }
+            //            watch.Stop();
 
-            var anonymousMappingThread = new Thread(() =>
-                {
-                    for (int i = 0; i < LoopCount; i++)
-                    {
-                        var watch = Stopwatch.StartNew();
-                        using (var connection = new LdapConnection(Server))
-                        {
-                            connection.SessionOptions.ProtocolVersion = 3;
-                            connection.AuthType = AuthType.Anonymous;
+            //            _dynamicRunTime += watch.ElapsedMilliseconds;
+            //        }
+            //    });
 
-                            using (var context = new DirectoryContext(connection))
-                            {
-                                var example = new { Ou = "", ObjectClass = "", DistinguishedName = "" };
-                                var match = context.Query(example, System.DirectoryServices.Protocols.SearchScope.Base, NamingContext)
-                                    .FirstOrDefault(e => e.ObjectClass != null);
-                            }
-                        }
-                        watch.Stop();
-                        _anonymousRunTime += watch.ElapsedMilliseconds;
-                    }
-                });
+            //var anonymousMappingThread = new Thread(() =>
+            //    {
+            //        for (int i = 0; i < LoopCount; i++)
+            //        {
+            //            var watch = Stopwatch.StartNew();
+            //            using (var connection = new LdapConnection(Server))
+            //            {
+            //                connection.SessionOptions.ProtocolVersion = 3;
+            //                connection.AuthType = AuthType.Anonymous;
 
-            var classMappingThread = new Thread(() =>
-            {
-                for (int i = 0; i < LoopCount; i++)
-                {
-                    var watch = Stopwatch.StartNew();
-                    using (var connection = new LdapConnection(Server))
-                    {
-                        connection.SessionOptions.ProtocolVersion = 3;
-                        connection.AuthType = AuthType.Anonymous;
+            //                using (var context = new DirectoryContext(connection))
+            //                {
+            //                    var example = new { Ou = "", ObjectClass = "", Uid = "", DistinguishedName = "" };
+            //                    var match = context.Query(example, System.DirectoryServices.Protocols.SearchScope.Subtree, NamingContext)
+            //                        .FirstOrDefault(e => e.Uid == null);
+            //                }
+            //            }
+            //            watch.Stop();
+            //            _anonymousRunTime += watch.ElapsedMilliseconds;
+            //        }
+            //    });
 
-                        using (var context = new DirectoryContext(connection))
-                        {
-                            var match = context.Query<SimpleClass>(System.DirectoryServices.Protocols.SearchScope.Base, NamingContext)
-                                .FirstOrDefault(e => e.ObjectClass != null);
-                        }
-                    }
-                    watch.Stop();
-                    _classRunTime += watch.ElapsedMilliseconds;
-                }
-            });
+            //var classMappingThread = new Thread(() =>
+            //{
+            //    for (int i = 0; i < LoopCount; i++)
+            //    {
+            //        var watch = Stopwatch.StartNew();
+            //        using (var connection = new LdapConnection(Server))
+            //        {
+            //            connection.SessionOptions.ProtocolVersion = 3;
+            //            connection.AuthType = AuthType.Anonymous;
 
-            var sdspThread = new Thread(() =>
-                {
-                    for (int i = 0; i < LoopCount; i++)
-                    {
-                        var watch = Stopwatch.StartNew();
-                        using (var connection = new LdapConnection(Server))
-                        {
-                            connection.SessionOptions.ProtocolVersion = 3;
-                            connection.AuthType = AuthType.Anonymous;
+            //            using (var context = new DirectoryContext(connection))
+            //            {
+            //                var match = context.Query<SimpleClass>(System.DirectoryServices.Protocols.SearchScope.Subtree, NamingContext)
+            //                    .FirstOrDefault(e => e.Uid != null);
+            //            }
+            //        }
+            //        watch.Stop();
+            //        _classRunTime += watch.ElapsedMilliseconds;
+            //    }
+            //});
 
-                            var request = new SearchRequest
-                            {
-                                Filter = "(objectclass=*)",
-                                DistinguishedName = NamingContext,
-                                Scope = System.DirectoryServices.Protocols.SearchScope.Base,
-                            };
-                            request.Attributes.AddRange(new[] { "ou", "objectclass" });
-                            request.Controls.Add(new PageResultRequestControl(1));
-                            var response = connection.SendRequest(request) as SearchResponse;
-                            var entry = response.Entries[0];
-                            var match = new
-                                            {
-                                                Ou = (string) entry.Attributes["ou"].GetValues(typeof (string))[0],
-                                                ObjectClass = (string) entry.Attributes["objectclass"].GetValues(typeof (string))[0], 
-                                                entry.DistinguishedName
-                                            };
-                        }
-                        watch.Stop();
-                        _sdspRunTime += watch.ElapsedMilliseconds;
-                    }
-                });
+            //var sdspThread = new Thread(() =>
+            //    {
+            //        for (int i = 0; i < LoopCount; i++)
+            //        {
+            //            var watch = Stopwatch.StartNew();
+            //            using (var connection = new LdapConnection(Server))
+            //            {
+            //                connection.SessionOptions.ProtocolVersion = 3;
+            //                connection.AuthType = AuthType.Anonymous;
 
-            Task.Factory.StartNew(() =>
-                {
-                    _directoryEntryRunTime = 0;
-                    _dynamicRunTime = 0;
-                    _anonymousRunTime = 0;
-                    _sdspRunTime = 0;
-                    _classRunTime = 0;
-                    _directoryEntryRunCount++;
+            //                var request = new SearchRequest
+            //                {
+            //                    Filter = "!(uid=*)",
+            //                    DistinguishedName = NamingContext,
+            //                    Scope = System.DirectoryServices.Protocols.SearchScope.Subtree,
+            //                };
+            //                request.Attributes.AddRange(new[] { "ou", "objectclass" });
+            //                request.Controls.Add(new PageResultRequestControl(1));
+            //                var response = connection.SendRequest(request) as SearchResponse;
+            //                var entry = response.Entries[0];
+            //                var match = new
+            //                                {
+            //                                    Ou = (string) entry.Attributes["ou"].GetValues(typeof (string))[0],
+            //                                    ObjectClass = (string) entry.Attributes["objectclass"].GetValues(typeof (string))[0], 
+            //                                    entry.DistinguishedName
+            //                                };
+            //            }
+            //            watch.Stop();
+            //            _sdspRunTime += watch.ElapsedMilliseconds;
+            //        }
+            //    });
 
-                    dirEntryThread.Start();
-                    while (dirEntryThread.IsAlive)
-                    {
-                    }
-
-                    sdspThread.Start();
-                    while (sdspThread.IsAlive)
-                    {
-                    }
+            //Task.Factory.StartNew(() =>
+            //    {
+            //        _dynamicRunTime = 0;
+            //        _anonymousRunTime = 0;
+            //        _sdspRunTime = 0;
+            //        _classRunTime = 0;
+            //        _directoryEntryRunCount++;
                     
-                    dynamicMappingThread.Start();
-                    while (dynamicMappingThread.IsAlive)
-                    {
-                    }
+            //        sdspThread.Start();
+            //        while (sdspThread.IsAlive)
+            //        {
+            //        }
                     
-                    anonymousMappingThread.Start();
-                    while (anonymousMappingThread.IsAlive)
-                    {
-                    }
+            //        dynamicMappingThread.Start();
+            //        while (dynamicMappingThread.IsAlive)
+            //        {
+            //        }
+                    
+            //        anonymousMappingThread.Start();
+            //        while (anonymousMappingThread.IsAlive)
+            //        {
+            //        }
 
-                    classMappingThread.Start();
-                    while (classMappingThread.IsAlive)
-                    {
-                    }
-                }, TaskCreationOptions.LongRunning)
-                           .ContinueWith(t =>
-                               {
-                                   _messenger.Send(new ToggleBusyMessage());
-                                   var sb = new StringBuilder();
+            //        classMappingThread.Start();
+            //        while (classMappingThread.IsAlive)
+            //        {
+            //        }
+            //    }, TaskCreationOptions.LongRunning)
+            //               .ContinueWith(t =>
+            //                   {
+            //                       _messenger.Send(new ToggleBusyMessage());
+            //                       var sb = new StringBuilder();
 
-                                   sb.AppendLine("=================================================");
-                                   sb.AppendFormat("Directory Entry vs LINQ to LDAP Run #{0}", _directoryEntryRunCount);
-                                   sb.AppendLine();
-                                   if (t.Exception != null)
-                                   {
-                                       _messenger.Send(new ErrorMessage(t.Exception));
-                                       sb.AppendLine("Error");
-                                   }
-                                   else
-                                   {
-                                       sb.AppendFormat("Directory Entry time: {0} ms averaged over {1} runs", _directoryEntryRunTime / LoopCount, LoopCount);
-                                       sb.AppendLine();
-                                       sb.AppendFormat("Raw S.DS.P time: {0} ms averaged over {1} runs", _sdspRunTime / LoopCount, LoopCount);
-                                       sb.AppendLine();
-                                       sb.AppendFormat("LINQ to LDAP dynamic time: {0} ms averaged over {1} runs", _dynamicRunTime / LoopCount, LoopCount);
-                                       sb.AppendLine();
-                                       sb.AppendFormat("LINQ to LDAP anonymous time: {0} ms averaged over {1} runs", _anonymousRunTime / LoopCount, LoopCount);
-                                       sb.AppendLine();
-                                       sb.AppendFormat("LINQ to LDAP class time: {0} ms averaged over {1} runs", _classRunTime / LoopCount, LoopCount);
-                                   }
-                                   sb.AppendLine();
-                                   sb.AppendLine("=================================================");
-                                   sb.AppendLine();
+            //                       sb.AppendLine("=================================================");
+            //                       sb.AppendFormat("LINQ to LDAP Run #{0}", _directoryEntryRunCount);
+            //                       sb.AppendLine();
+            //                       if (t.Exception != null)
+            //                       {
+            //                           _messenger.Send(new ErrorMessage(t.Exception));
+            //                           sb.AppendLine("Error");
+            //                       }
+            //                       else
+            //                       {
+            //                           sb.AppendFormat("Raw S.DS.P time: {0} ms averaged over {1} runs", _sdspRunTime / LoopCount, LoopCount);
+            //                           sb.AppendLine();
+            //                           sb.AppendFormat("LINQ to LDAP dynamic time: {0} ms averaged over {1} runs", _dynamicRunTime / LoopCount, LoopCount);
+            //                           sb.AppendLine();
+            //                           sb.AppendFormat("LINQ to LDAP anonymous time: {0} ms averaged over {1} runs", _anonymousRunTime / LoopCount, LoopCount);
+            //                           sb.AppendLine();
+            //                           sb.AppendFormat("LINQ to LDAP class time: {0} ms averaged over {1} runs", _classRunTime / LoopCount, LoopCount);
+            //                       }
+            //                       sb.AppendLine();
+            //                       sb.AppendLine("=================================================");
+            //                       sb.AppendLine();
 
-                                   DirectoryEntryRunText += sb.ToString();
-                                   RaisePropertyChanged("DirectoryEntryRunText");
-                               }, TaskScheduler.FromCurrentSynchronizationContext());
+            //                       DirectoryEntryRunText += sb.ToString();
+            //                       RaisePropertyChanged("DirectoryEntryRunText");
+            //                   }, TaskScheduler.FromCurrentSynchronizationContext());
 
         }
 
@@ -385,7 +381,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
         {
             public string DistinguishedName { get; set; }
             public string Ou { get; set; }
-            public string ObjectClass { get; set; }
+            public string Uid { get; set; }
         }
     }
 }

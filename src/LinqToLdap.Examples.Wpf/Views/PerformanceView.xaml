@@ -27,14 +27,14 @@
             <TextBox Text="{Binding FactoryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="150" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>
         </StackPanel>
 
-        <StackPanel Grid.Row="2" Margin="5">
+        <StackPanel Grid.Row="2" Margin="5" Visibility="Collapsed">
             <TextBlock Style="{StaticResource Header}">DirectoryEntry vs. LINQ to LDAP vs. Raw S.DS.P</TextBlock>
             <TextBlock TextWrapping="WrapWithOverflow">
                 The section below will test the performance of using a DirectoryEntry, LINQ to LDAP, and raw S.DS.P.
                 See the DirectoryEntryCompareWork method in /ViewModels/PerformanceViewModel.cs for code.
             </TextBlock>
         </StackPanel>
-        <StackPanel Orientation="Vertical" Grid.Row="3">
+        <StackPanel Orientation="Vertical" Grid.Row="3" Visibility="Collapsed">
             <Button Command="{Binding DirectoryEntryCommand}">Go!</Button>
             <TextBox Text="{Binding DirectoryEntryRunText, UpdateSourceTrigger=PropertyChanged}" IsReadOnly="True" Height="150" HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible"></TextBox>
         </StackPanel>
