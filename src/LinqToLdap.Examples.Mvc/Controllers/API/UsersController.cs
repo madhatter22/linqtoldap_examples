@@ -51,7 +51,7 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             var user = _context.Query<User>().FirstOrDefault(u => u.UserId == id);
 
             if (user == null) throw new HttpResponseException(HttpStatusCode.NotFound);
-
+                
             return user;
         }
     }

@@ -46,13 +46,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="LinqToLdap, Version=3.3.0.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
+    <Reference Include="LinqToLdap, Version=3.3.1.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\LinqToLdap.3.3\lib\net45\LinqToLdap.dll</HintPath>
+      <HintPath>..\packages\LinqToLdap.3.3.1\lib\net45\LinqToLdap.dll</HintPath>
     </Reference>
     <Reference Include="LinqToLdap.Contrib, Version=1.0.0.0, Culture=neutral, PublicKeyToken=d4ffa016fc97ad84, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\LinqToLdap.3.3\lib\net45\LinqToLdap.Contrib.dll</HintPath>
+      <HintPath>..\packages\LinqToLdap.3.3.1\lib\net45\LinqToLdap.Contrib.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=4.5.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">

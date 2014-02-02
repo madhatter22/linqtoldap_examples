@@ -5474,12 +5474,6 @@
              Creates an empty read only dictionary
             </summary>
         </member>
-        <member name="M:LinqToLdap.Collections.ReadOnlyDictionary`2.#ctor(System.Collections.Generic.IDictionary{`0,`1})">
-            <summary>
-            Creates a read only dicitonary from an existing dictionary.
-            </summary>
-            <param name="source"></param>
-        </member>
         <member name="M:LinqToLdap.Collections.ReadOnlyDictionary`2.#ctor(System.Collections.Generic.IEnumerable{System.Collections.Generic.KeyValuePair{`0,`1}})">
             <summary>
             Creates a read only dicitonary from an existing enumerbale <see cref="T:System.Collections.Generic.KeyValuePair`2"/>.
@@ -5561,6 +5555,124 @@
         <member name="P:LinqToLdap.Collections.ReadOnlyDictionary`2.IsReadOnly">
             <summary>
             Return true
+            </summary>
+        </member>
+        <member name="T:LinqToLdap.TestSupport.MockQuery`1">
+            <summary>
+            Mock implementation of <see cref="T:System.Linq.IOrderedQueryable`1"/> for unit testing.
+            </summary>
+            <typeparam name="T">Type of the query</typeparam>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQuery`1.#ctor(System.Collections.Generic.IList{System.Object})">
+            <summary>
+            Consturctor for <see cref="T:LinqToLdap.TestSupport.MockQuery`1"/>.
+            </summary>
+            <param name="resultsToReturn">The results to return in order of execution. Supports multiple result types for query reuese.  Pass null if you don't care about the results.</param>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQuery`1.GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through the collection.
+            </summary>
+            <returns>
+            A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
+            </returns>
+            <filterpriority>1</filterpriority>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQuery`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Returns an enumerator that iterates through a collection.
+            </summary>
+            <returns>
+            An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
+            </returns>
+            <filterpriority>2</filterpriority>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQuery`1.Expression">
+            <summary>
+            Gets the expression tree that is associated with the instance of <see cref="T:System.Linq.IQueryable"/>.
+            </summary>
+            <returns>
+            The <see cref="T:System.Linq.Expressions.Expression"/> that is associated with this instance of <see cref="T:System.Linq.IQueryable"/>.
+            </returns>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQuery`1.ElementType">
+            <summary>
+            Gets the type of the element(s) that are returned when the expression tree associated with this instance of <see cref="T:System.Linq.IQueryable"/> is executed.
+            </summary>
+            <returns>
+            A <see cref="T:System.Type"/> that represents the type of the element(s) that are returned when the expression tree associated with this object is executed.
+            </returns>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQuery`1.Provider">
+            <summary>
+            Gets the query provider that is associated with this data source.
+            </summary>
+            <returns>
+            The <see cref="T:System.Linq.IQueryProvider"/> that is associated with this data source. This is the same instance as <see cref="P:LinqToLdap.TestSupport.MockQuery`1.MockProvider"/>.
+            </returns>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQuery`1.MockProvider">
+            <summary>
+            Gets the query provider that is associated with this data source.
+            </summary>
+            <returns>
+            The <see cref="T:System.Linq.MockQueryProvider"/> that is associated with this data source. This is the same instance as <see cref="P:LinqToLdap.TestSupport.MockQuery`1.Provider"/>.
+            </returns>
+        </member>
+        <member name="T:LinqToLdap.TestSupport.MockQueryProvider">
+            <summary>
+            A mock <see cref="T:System.Linq.IQueryProvider"/>.
+            </summary>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQueryProvider.#ctor(System.Collections.Generic.IList{System.Object})">
+            <summary>
+            Constructor
+            </summary>
+            <param name="resultsToReturn">The results to return with the query is executed.</param>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQueryProvider.CreateQuery(System.Linq.Expressions.Expression)">
+            <summary>
+            Creates a new query with the expression and sets <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.CurrentExpression"/> equal to <paramref name="expression"/>.
+            </summary>
+            <param name="expression">The expression</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQueryProvider.CreateQuery``1(System.Linq.Expressions.Expression)">
+            <summary>
+            Creates a new query with the expression and sets <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.CurrentExpression"/> equal to <paramref name="expression"/>.
+            </summary>
+            <typeparam name="TElement">The return type of the query.</typeparam>
+            <param name="expression">The expession.</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQueryProvider.Execute(System.Linq.Expressions.Expression)">
+            <summary>
+            Sets <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.CurrentExpression"/> equal to <paramref name="expression"/> and adds it to <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.ExecutedExpressions"/>. Returns the a result from <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.ResultsToReturn"/> based on the number of execution calls that have occurred.
+            </summary>
+            <param name="expression">The expression</param>
+            <returns></returns>
+        </member>
+        <member name="M:LinqToLdap.TestSupport.MockQueryProvider.Execute``1(System.Linq.Expressions.Expression)">
+            <summary>
+            Sets <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.CurrentExpression"/> equal to <paramref name="expression"/> and adds it to <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.ExecutedExpressions"/>. Returns the a result from <see cref="P:LinqToLdap.TestSupport.MockQueryProvider.ResultsToReturn"/> based on the number of execution calls that have occurred.
+            </summary>
+            <typeparam name="TResult">The type of the result</typeparam>
+            <param name="expression">The expression.</param>
+            <returns></returns>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQueryProvider.ResultsToReturn">
+            <summary>
+            The results to return when the provider is executed.
+            </summary>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQueryProvider.CurrentExpression">
+            <summary>
+            The last expression passed into <see cref="M:LinqToLdap.TestSupport.MockQueryProvider.CreateQuery(System.Linq.Expressions.Expression)"/>, <see cref="M:LinqToLdap.TestSupport.MockQueryProvider.CreateQuery``1(System.Linq.Expressions.Expression)"/>, <see cref="M:LinqToLdap.TestSupport.MockQueryProvider.Execute(System.Linq.Expressions.Expression)"/>, or <see cref="M:LinqToLdap.TestSupport.MockQueryProvider.Execute``1(System.Linq.Expressions.Expression)"/>.
+            </summary>
+        </member>
+        <member name="P:LinqToLdap.TestSupport.MockQueryProvider.ExecutedExpressions">
+            <summary>
+            All expressions executed by this provider. The most recent expression is at the end of the list.
             </summary>
         </member>
         <member name="T:LinqToLdap.Transformers.IResultTransformer">
