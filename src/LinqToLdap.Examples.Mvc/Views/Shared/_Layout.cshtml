@@ -18,9 +18,13 @@
                         <li>@Html.ActionLink("Server Info", "ServerInfo", "Home", null, new{id = "navServerInfo"})</li>
                         <li>@Html.ActionLink("Users", "Users", "Home", null, new{id = "navUsers"})</li>
                     </ul>
-                    <form class="navbar-form form-inline pull-right">
-                        <label class="control-label" for="traceEnabled">Enable Logging (see output window)</label>
-                        @Html.CheckBox("traceEnabled", (bool)ViewBag.TraceEnabled)
+                    <form class="navbar-form pull-right">
+                        <div class="checkbox">
+                            <label>
+                                @Html.CheckBox("traceEnabled", (bool)ViewBag.TraceEnabled)
+                                Enable Logging (see output window)
+                            </label>
+                        </div>
                     </form>
                 </div>
             </div>

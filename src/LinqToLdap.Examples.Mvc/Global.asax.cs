@@ -41,7 +41,7 @@ namespace LinqToLdap.Examples.Mvc
 
             var container = new Container();
 
-            container.RegisterSingle<ILinqToLdapLogger>(() => new SimpleTextLogger());
+            container.RegisterSingle<ILinqToLdapLogger>(new SimpleTextLogger());
 
             container.RegisterSingle<ILdapConfiguration>(() =>
             {
