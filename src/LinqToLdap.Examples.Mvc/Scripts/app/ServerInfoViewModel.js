@@ -10,7 +10,7 @@
     };
 
     $.blockUI();
-    $.getJSON('/api/serverinfo')
+    $.getJSON('/api/serverinfo/get')
         .success(function (data) {
             $.unblockUI();
             self.serverSettings($.map(data, function(item) { return new ListItemViewModel(item); }));

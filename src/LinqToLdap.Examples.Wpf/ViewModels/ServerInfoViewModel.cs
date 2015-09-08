@@ -31,6 +31,7 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             Task.Run(
                 () =>
                 {
+
                     return _context.ListServerAttributes("altServer", "objectClass", "namingContexts",
                         "supportedControl", "supportedExtension",
                         "supportedLDAPVersion",

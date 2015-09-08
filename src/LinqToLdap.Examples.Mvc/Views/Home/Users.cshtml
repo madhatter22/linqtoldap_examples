@@ -41,6 +41,7 @@
                         <th></th>
                         <th>Distinguished Name</th>
                         <th>User Id</th>
+                        <th>Primary Affiliation</th>
                         <th>Name</th>
                     </tr>
                 </thead>
@@ -49,6 +50,7 @@
                         <td><div class="text-center"><a class="btn btn-small" data-bind="click: load">View</a></div></td>
                         <td data-bind="text: distinguishedName"/>
                         <td data-bind="text: userId"/>
+                        <td data-bind="text: primaryAffiliation" />
                         <td data-bind="text: name"/>
                     </tr>
                 </tbody>
@@ -88,9 +90,9 @@
             </div>
         </div>
         <div class="control-group">
-            <label class="control-label" for="inputTelephoneNumber">Telephone Number</label>
+            <label class="control-label" for="inputPrimaryAffiliation">Primary Affiliation</label>
             <div class="controls">
-                <input type="text" id="inputTelephoneNumber" placeholder="Telephone Number" data-bind="value: item.telephoneNumber">
+                <input type="text" id="inputPrimaryAffiliation" placeholder="Primary Affiliation" data-bind="value: item.primaryAffiliation">
             </div>
         </div>
         <div class="control-group">

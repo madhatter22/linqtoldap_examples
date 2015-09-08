@@ -71,7 +71,7 @@ namespace LinqToLdap.Examples.Mvc.Tests
                 .Returns(list.AsQueryable());
 
             //act
-            var results = _usersController.Get("", false) as UserListItem[];
+            var results = _usersController.Find("", false) as UserListItem[];
 
             //assert
             results.Should().Have.Count.EqualTo(1);
@@ -93,14 +93,14 @@ namespace LinqToLdap.Examples.Mvc.Tests
                 .Returns(mockQuery);
 
             //act
-            var results = _usersController.Get("blah blah", true) as IEnumerable<object>;
+            var results = _usersController.Find("blah blah", true) as IEnumerable<object>;
 
             //assert
             results.Satisfy(x => x.Count() == 1 && ((UserListItem)x.First()).DistinguishedName == "test");
             mockQuery.MockProvider.ExecutedExpressions[0].ToString()
                 .Should()
                 .Contain(
-                    "FilterWith(\"(blah blah)\").Select(s => new UserListItem() {DistinguishedName = s.DistinguishedName, Name = Format(\"{0} {1}\", s.FirstName, s.LastName), UserId = s.UserId})");
+                    "FilterWith(\"(blah blah)\").Select(s => new UserListItem() {DistinguishedName = s.DistinguishedName, Name = Format(\"{0} {1}\", s.FirstName, s.LastName), PrimaryAffiliation = s.PrimaryAffiliation, UserId = s.UserId})");
         }
 
         [TestMethod]
@@ -118,7 +118,7 @@ namespace LinqToLdap.Examples.Mvc.Tests
                 .Returns(list.AsQueryable());
 
             //act
-            var results = _usersController.Get("john doe", false) as UserListItem[];
+            var results = _usersController.Find("john doe", false) as UserListItem[];
 
             //assert
             results.Satisfy(x => x.Count() == 1 && x.First().DistinguishedName == "test 4");
@@ -139,7 +139,7 @@ namespace LinqToLdap.Examples.Mvc.Tests
                 .Returns(list.AsQueryable());
 
             //act
-            var results = _usersController.Get("term", false) as UserListItem[];
+            var results = _usersController.Find("term", false) as UserListItem[];
 
             //assert
             results.Satisfy(

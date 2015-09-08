@@ -5,6 +5,7 @@
         this.distinguishedName = ko.observable(item.DistinguishedName);
         this.name = ko.observable(item.Name);
         this.userId = ko.observable(item.UserId);
+        this.primaryAffiliation = ko.observable(item.PrimaryAffiliation);
         
         this.load = function() {
             self.loadItem(this.userId());
@@ -19,7 +20,7 @@
         this.userId = ko.observable('');
         this.firstName = ko.observable('');
         this.lastName = ko.observable('');
-        this.telephoneNumber = ko.observable('');
+        this.primaryAffiliation = ko.observable('');
 
         this.setValues = function(item) {
             this.distinguishedName(item.DistinguishedName);
@@ -27,7 +28,7 @@
             this.userId(item.UserId);
             this.firstName(item.FirstName);
             this.lastName(item.LastName);
-            this.telephoneNumber(item.TelephoneNumber);
+            this.primaryAffiliation(item.PrimaryAffiliation);
         };
     };
 
@@ -45,7 +46,7 @@
     self.loadItem = function (id) {
         $.blockUI();
         $.getJSON('/api/users/get', { id: id })
-            .success(function (data) {
+            .done(function (data) {
                 $.unblockUI();
                 self.item.setValues(data);
                 self.mode('item');
@@ -59,8 +60,8 @@
     self.search = function () {
         self.isSearching(true);
         $.blockUI();
-        $.getJSON('/api/users/get', { q: self.query(), custom: self.isCustomFilter() })
-            .success(function (data) {
+        $.getJSON('/api/users/find', { q: self.query(), custom: self.isCustomFilter() })
+            .done(function (data) {
                 $.unblockUI();
                 self.isSearching(false);
                 if (data.message) {

@@ -123,8 +123,9 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                             }
 
                             return query.Select(
-                                s => new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName,
+                                s => new UserListViewModel(s.DistinguishedName, s.UserId, s.FirstName, s.LastName, s.PrimaryAffiliation,
                                     LoadUser))
+                                    .Take(50)
                                 .ToList();
                         });
         }

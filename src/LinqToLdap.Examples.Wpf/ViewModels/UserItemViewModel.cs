@@ -73,14 +73,14 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
             }
         }
 
-        public string TelephoneNumber
+        public string PrimaryAffiliation
         {
-            get { return _user == null ? "" : _user.TelephoneNumber; }
+            get { return _user == null ? "" : _user.PrimaryAffiliation; }
             set
             {
-                if (_user == null || _user.TelephoneNumber == value) return;
-                _user.TelephoneNumber = value;
-                RaisePropertyChanged("TelephoneNumber");
+                if (_user == null || _user.PrimaryAffiliation == value) return;
+                _user.PrimaryAffiliation = value;
+                RaisePropertyChanged("PrimaryAffiliation");
             }
         }
 

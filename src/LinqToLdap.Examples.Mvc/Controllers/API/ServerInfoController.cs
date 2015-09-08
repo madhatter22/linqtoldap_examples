@@ -13,6 +13,7 @@ namespace LinqToLdap.Examples.Mvc.Controllers.API
             _context = context;
         }
 
+        [HttpGet]
         public IEnumerable<object> Get()
         {
             return _context.ListServerAttributes("altServer", "objectClass", "namingContexts",

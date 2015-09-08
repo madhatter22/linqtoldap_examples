@@ -1,4 +1,5 @@
-﻿using System.DirectoryServices.Protocols;
+﻿using System;
+using System.DirectoryServices.Protocols;
 using System.Reflection;
 using System.Web;
 using System.Web.Http;
@@ -9,7 +10,9 @@ using LinqToLdap.Examples.Mvc.App_Start;
 using LinqToLdap.Logging;
 using LinqToLdap.Mapping;
 using SimpleInjector;
+using SimpleInjector.Integration.Web;
 using SimpleInjector.Integration.Web.Mvc;
+using SimpleInjector.Integration.WebApi;
 
 namespace LinqToLdap.Examples.Mvc
 {
@@ -21,13 +24,11 @@ namespace LinqToLdap.Examples.Mvc
 
         protected MvcApplication()
         {
-            EndRequest += delegate
-                              {
-                                  var context =
-                                      HttpContext.Current.Items[ConextRequestKey] as IDirectoryContext;
+        }
 
-                                  if (context != null) context.Dispose();
-                              };
+        protected void Application_Error()
+        {
+            var exception = Server.GetLastError();
         }
 
         protected void Application_Start()
@@ -41,12 +42,14 @@ namespace LinqToLdap.Examples.Mvc
 
             var container = new Container();
 
-            container.RegisterSingle<ILinqToLdapLogger>(new SimpleTextLogger());
+            container.Options.DefaultScopedLifestyle = new WebRequestLifestyle();
 
-            container.RegisterSingle<ILdapConfiguration>(() =>
+            container.RegisterSingleton<ILinqToLdapLogger>(new SimpleTextLogger());
+
+            container.RegisterSingleton<ILdapConfiguration>(() =>
             {
                 var config = new LdapConfiguration()
-                    .MaxPageSizeIs(500)
+                    .MaxPageSizeIs(50)
                     .LogTo(container.GetInstance<ILinqToLdapLogger>());
 
                 //Note the optional parameters available on AddMapping.
@@ -59,12 +62,8 @@ namespace LinqToLdap.Examples.Mvc
                 // get mapped the first time we query for users.
                 // This only applies to auto and attribute-based mapping.
 
-                config.ConfigurePooledFactory("ldap.testathon.net")
-                      .AuthenticateBy(AuthType.Basic)
-                      .AuthenticateAs(
-                          new System.Net.NetworkCredential(
-                              "CN=stuart,OU=Users,DC=testathon,DC=net",
-                              "stuart"))
+                config.ConfigurePooledFactory("directory.utexas.edu")
+                      .AuthenticateBy(AuthType.Anonymous)
                       .MinPoolSizeIs(0)
                       .MaxPoolSizeIs(5)
                       .UsePort(389)
@@ -74,15 +73,16 @@ namespace LinqToLdap.Examples.Mvc
             });
 
             //simple context per request only when requested
-            container.Register<IDirectoryContext>(() => 
-                (HttpContext.Current.Items[ConextRequestKey] as IDirectoryContext) ??
-                    (HttpContext.Current.Items[ConextRequestKey] = new DirectoryContext(container.GetInstance<ILdapConfiguration>())) as IDirectoryContext);
+            container.Register<IDirectoryContext>(() => container.GetInstance<ILdapConfiguration>().CreateContext(), Lifestyle.Scoped);
 
+            container.RegisterWebApiControllers(GlobalConfiguration.Configuration);
             container.RegisterMvcControllers(Assembly.GetExecutingAssembly());
-            container.RegisterMvcAttributeFilterProvider();
+            
 
             GlobalConfiguration.Configuration.DependencyResolver = new SimpleInjectorWebApiDependencyResolver(container);
             DependencyResolver.SetResolver(new SimpleInjectorDependencyResolver(container));
+            
+            container.Verify();
         }
     }
 }

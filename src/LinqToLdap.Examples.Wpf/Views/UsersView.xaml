@@ -39,6 +39,7 @@
                             </GridViewColumn>
                             <GridViewColumn Width="350" Header="Distinguished Name" DisplayMemberBinding="{Binding Path=DistinguishedName}"/>
                             <GridViewColumn Width="125" Header="User Id" DisplayMemberBinding="{Binding Path=UserId}"/>
+                            <GridViewColumn Width="125" Header="Affiliation" DisplayMemberBinding="{Binding Path=PrimaryAffiliation}"/>
                             <GridViewColumn Width="200" Header="Name" DisplayMemberBinding="{Binding Path=Name}"/>
                         </GridView>
                     </ListView.View>
@@ -75,8 +76,8 @@
                 <Label Grid.Column="0" Grid.Row="4">Last Name</Label>
                 <TextBox Grid.Column="1" Grid.Row="4" Text="{Binding LastName}"></TextBox>
 
-                <Label Grid.Column="0" Grid.Row="5">Telephone Number</Label>
-                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding TelephoneNumber}"></TextBox>
+                <Label Grid.Column="0" Grid.Row="5">Primary Affiliation</Label>
+                <TextBox Grid.Column="1" Grid.Row="5" Text="{Binding PrimaryAffiliation}"></TextBox>
 
                 <Button Grid.ColumnSpan="2" Grid.Row="6" Margin="15" VerticalAlignment="Bottom" HorizontalAlignment="Right" Command="{Binding CloseCommand}">Back</Button>
             </Grid>

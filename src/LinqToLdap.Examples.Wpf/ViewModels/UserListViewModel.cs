@@ -8,11 +8,12 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
     {
         private Action<string> _show;
 
-        public UserListViewModel(string dn, string userId, string firstName, string lastName, Action<string> show)
+        public UserListViewModel(string dn, string userId, string firstName, string lastName, string primaryAffiliation, Action<string> show)
         {
             DistinguishedName = dn;
             UserId = userId;
             Name = string.Format("{0} {1}", firstName, lastName);
+            PrimaryAffiliation = primaryAffiliation;
 
             _show = show;
             ShowCommand = new RelayCommand(() => _show(UserId));
@@ -41,6 +42,18 @@ namespace LinqToLdap.Examples.Wpf.ViewModels
                 if (_userId == value) return;
                 _userId = value;
                 RaisePropertyChanged("UserId");
+            }
+        }
+
+        private string _primaryAffiliation;
+        public string PrimaryAffiliation
+        {
+            get { return _primaryAffiliation; }
+            set
+            {
+                if (_primaryAffiliation == value) return;
+                _primaryAffiliation = value;
+                RaisePropertyChanged("PrimaryAffiliation");
             }
         }
 

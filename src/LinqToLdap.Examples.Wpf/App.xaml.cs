@@ -39,14 +39,14 @@ namespace LinqToLdap.Examples.Wpf
         private void CreateContainer(object sender, StartupEventArgs e)
         {
             var container = new Container();
-            container.RegisterSingle<ILinqToLdapLogger>(() => new SimpleTextLogger(Console.Out));
+            container.RegisterSingleton<ILinqToLdapLogger>(() => new SimpleTextLogger(Console.Out));
 
-            container.RegisterSingle(() => Messenger.Default);
-
-            container.RegisterSingle<ILdapConfiguration>(() =>
+            container.RegisterSingleton(() => Messenger.Default);
+            
+            container.RegisterSingleton<ILdapConfiguration>(() =>
             {
                 var config = new LdapConfiguration()
-                    .MaxPageSizeIs(500)
+                    .MaxPageSizeIs(50)
                     .LogTo(container.GetInstance<ILinqToLdapLogger>());
 
                 // Note the optional parameters on AddMapping.
@@ -60,12 +60,8 @@ namespace LinqToLdap.Examples.Wpf
                 // get mapped the first time we query for users.
                 // This only applies to auto and attribute-based mapping.
 
-                config.ConfigurePooledFactory("ldap.testathon.net")
-                      .AuthenticateBy(AuthType.Basic)
-                      .AuthenticateAs(
-                          new System.Net.NetworkCredential(
-                              "CN=stuart,OU=Users,DC=testathon,DC=net",
-                              "stuart"))
+                config.ConfigurePooledFactory("directory.utexas.edu")
+                      .AuthenticateBy(AuthType.Anonymous)
                       .MinPoolSizeIs(0)
                       .MaxPoolSizeIs(5)
                       .UsePort(389)

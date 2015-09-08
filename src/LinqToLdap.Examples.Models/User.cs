@@ -2,7 +2,7 @@
 
 namespace LinqToLdap.Examples.Models
 {
-    [DirectorySchema("OU=users,DC=testathon,DC=net", ObjectClass = "inetOrgPerson")]
+    [DirectorySchema("dc=directory,dc=utexas,dc=edu", ObjectClass = "inetOrgPerson")]
     public class User : DirectoryObject
     {
         [DirectoryAttribute("cn", ReadOnly = true)]
@@ -11,13 +11,17 @@ namespace LinqToLdap.Examples.Models
         [DirectoryAttribute("uid", ReadOnly = true)]
         public string UserId { get; set; }
 
+        [DirectoryAttribute("utexasedupersonprimarypubaffiliation", ReadOnly = true)]
+        public string PrimaryAffiliation { get; set; }
+
         [DirectoryAttribute("givenname", ReadOnly = true)]
         public string FirstName { get; set; }
 
         [DirectoryAttribute("sn", ReadOnly = true)]
         public string LastName { get; set; }
 
-        [DirectoryAttribute(ReadOnly = true)]
-        public string TelephoneNumber { get; set; }
+        [DirectoryAttribute]
+        public string[] ObjectClasses { get; set; }
+
     }
 }
